@@ -41,8 +41,27 @@ export default function LandingPage() {
                 transition: "opacity 1.5s ease 1.3s, transform 1.5s ease 1.3s",
               }}
             >
-              <button className="btn btn-light px-4 py-2 fw-semibold rounded-pill">Go to Dashbaord</button>
-              <button  onClick={() => navigate('/safety-guidelines')} className="btn btn-outline-light px-4 py-2 fw-semibold rounded-pill">Safety Guidelines</button>
+              <div className="d-flex gap-3 flex-wrap" style={{ maxWidth: "500px" }}>
+  <button className="btn btn-light px-4 py-2 fw-semibold rounded-pill">
+    Go to Dashboard
+  </button>
+  <button
+    onClick={() => navigate('/safety-guidelines')}
+    className="btn btn-outline-light px-4 py-2 fw-semibold rounded-pill"
+  >
+    Safety Guidelines
+  </button>
+
+ 
+  <div className="w-100 mt-3">
+    <button
+      className="btn btn btn-outline-light fw-semibold rounded-pill " style={{paddingLeft:"159px",paddingRight:"159px",marginTop:"-8px"}}
+    >
+      Login
+    </button>
+  </div>
+</div>
+
             </div>
           </div>
 <div
@@ -65,6 +84,7 @@ export default function LandingPage() {
     backgroundColor: "transparent",
   }}
 >
+  
   <div style={{ fontSize: "1.3rem", fontWeight: "650", marginBottom: "18px", }}>
     QUICK STATS
   </div >

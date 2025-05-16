@@ -22,7 +22,7 @@ const App = () => {
     <Router>
       <Navbar1 />
       <div className="flex min-h-screen bg-gray-100">
-        <Navbar />
+        {/* <Navbar /> */}
         <main className="flex-1 bg-white">
           <Routes>
             <Route path="/" element={<Test />} /> {/* Landing page */}
