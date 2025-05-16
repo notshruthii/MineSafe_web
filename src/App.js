@@ -15,11 +15,8 @@ import ManagerLogin from './pages/ManagerLogin';
 
 
 import Test from './test.js';
-
-
 import Navbar1 from './components/Navbar1.js'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar1 from './components/Navbar1';
 import Navbar from './Navbar';
 import Header from './Header';
 const App = () => {

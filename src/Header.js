@@ -8,19 +8,20 @@ const generateMonthlyAttendance = () => {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   return months.map(month => ({
     month,
-    attendance: parseFloat((Math.random()).toFixed(2)),
+    attendance: parseFloat(Math.random().toFixed(2)),
   }));
 };
 
 const Header = () => {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
+  const [attendanceData, setAttendanceData] = useState(generateMonthlyAttendance());
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date().toLocaleTimeString());
-    }, 1000); // update every second
+    }, 1000);
 
-    return () => clearInterval(interval); // cleanup on unmount
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -47,13 +48,20 @@ const Header = () => {
         <div className="h-64">
           <h2 className="text-xl font-semibold text-center mb-4">Attendance Overview</h2>
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={attendanceData}>
+            <LineChart data={attendanceData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="day" stroke="#ccc" />
-              <YAxis domain={[0, 1]} ticks={[0, 1]} />
+              <XAxis
+                dataKey="month"
+                stroke="#ccc"
+                angle={-45}
+                textAnchor="end"
+                height={60}
+                tick={{ fontSize: 12 }}
+              />
+              <YAxis domain={[0, 1]} ticks={[0, 0.25, 0.5, 0.75, 1]} />
               <Tooltip />
-              <Bar dataKey="attendance" fill="#34d399" radius={[4, 4, 0, 0]} />
-            </BarChart>
+              <Line type="monotone" dataKey="attendance" stroke="#34d399" strokeWidth={3} dot={{ r: 5 }} />
+            </LineChart>
           </ResponsiveContainer>
         </div>
 
@@ -66,7 +74,7 @@ const Header = () => {
           />
           <h1 className="text-4xl font-bold text-white drop-shadow mb-2">Sharanya Gupta</h1>
           <p className="text-lg"><strong>Shift Time:</strong> 6:00 AM - 2:00 PM</p>
-          <p className="text-lg"><strong>Zone Assigned:</strong>Zone A</p>
+          <p className="text-lg"><strong>Zone Assigned:</strong> Zone A</p>
           <p className="text-sm text-gray-200 mt-4">{currentTime}</p>
         </div>
       </div>
