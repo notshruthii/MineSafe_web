@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { FaBars, FaTimes } from 'react-icons/fa';
+import { FaBars, FaTimes, FaClock, FaPen, FaSignOutAlt } from 'react-icons/fa';
+import { GiHelmet } from 'react-icons/gi';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -20,46 +21,51 @@ const Navbar = () => {
         <NavLink
           to="/startshift"
           className={({ isActive }) =>
-            `block py-2 px-3 rounded-md text-sm font-medium ${isActive ? 'bg-gray-200' : 'hover:bg-gray-100'}`
+            `flex items-center gap-3 py-2 px-3 rounded-md text-sm font-medium ${isActive ? 'bg-gray-200' : 'hover:bg-gray-100'}`
           }
         >
-          {isOpen ? 'Start Shift' : null}
+          <FaClock />
+          {isOpen && 'Start Shift'}
         </NavLink>
 
         <NavLink
           to="/attendance"
           className={({ isActive }) =>
-            `block py-2 px-3 rounded-md text-sm font-medium ${isActive ? 'bg-gray-200' : 'hover:bg-gray-100'}`
+            `flex items-center gap-3 py-2 px-3 rounded-md text-sm font-medium ${isActive ? 'bg-gray-200' : 'hover:bg-gray-100'}`
           }
         >
-          {isOpen ? 'Safety Tools' : null}
+          <GiHelmet />
+          {isOpen && 'Safety Tools'}
         </NavLink>
 
         <NavLink
           to="/profile"
           className={({ isActive }) =>
-            `block py-2 px-3 rounded-md text-sm font-medium ${isActive ? 'bg-gray-200' : 'hover:bg-gray-100'}`
+            `flex items-center gap-3 py-2 px-3 rounded-md text-sm font-medium ${isActive ? 'bg-gray-200' : 'hover:bg-gray-100'}`
           }
         >
-          {isOpen ? 'Task Logging' : null}
+          <FaPen />
+          {isOpen && 'Task Logging'}
         </NavLink>
 
         <NavLink
           to="/help"
           className={({ isActive }) =>
-            `block py-2 px-3 rounded-md text-sm font-medium ${isActive ? 'bg-gray-200' : 'hover:bg-gray-100'}`
+            `flex items-center gap-3 py-2 px-3 rounded-md text-sm font-medium ${isActive ? 'bg-gray-200' : 'hover:bg-gray-100'}`
           }
         >
-          {isOpen ? 'End Shift' : null}
+          <FaClock />
+          {isOpen && 'End Shift'}
         </NavLink>
 
         <NavLink
           to="/logout"
           className={({ isActive }) =>
-            `block py-2 px-3 rounded-md text-sm font-medium ${isActive ? 'bg-gray-200' : 'hover:bg-gray-100'}`
+            `flex items-center gap-3 py-2 px-3 rounded-md text-sm font-medium ${isActive ? 'bg-gray-200' : 'hover:bg-gray-100'}`
           }
         >
-          {isOpen ? 'Logout' : null}
+          <FaSignOutAlt />
+          {isOpen && 'Logout'}
         </NavLink>
       </nav>
     </div>
