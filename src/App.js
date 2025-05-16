@@ -8,6 +8,12 @@ import SafetyTools from './pages/SafetyTools';
 import TaskLogging from './pages/TaskLogging';
 import EndShift from './pages/EndShift';
 import Logout from './pages/Logout';
+import LoginChoice from './pages/LoginChoice';
+import WorkerLogin from './pages/WorkerLogin';
+import ManagerLogin from './pages/ManagerLogin';
+
+
+
 import Test from './test.js';
 import Navbar1 from './components/Navbar1.js'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -29,6 +35,9 @@ const App = () => {
             <Route path="/profile" element={<div className="p-6">Profile Page</div>} />
             <Route path="/help" element={<div className="p-6">Help Page</div>} />
             <Route path="/logout" element={<div className="p-6">Logout Page</div>} />
+            <Route path="/login" element={<LoginChoice />} />
+            <Route path="/worker-login" element={<WorkerLogin />} />
+            <Route path="/manager-login" element={<ManagerLogin />} />
           </Routes>
         </main>
       </div>
