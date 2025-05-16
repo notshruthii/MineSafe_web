@@ -3,15 +3,15 @@ import React from 'react';
 import coal_logo from "./coal3.png"; 
 const Navbar=()=>{
   return(
-    <nav className="navbar navbar-expand-lg navbar-light  px-4">
+    <nav className="navbar navbar-expand-lg navbar-light px-4">
       <a className="navbar-brand d-flex align-items-center" href="#">
-        <img src={coal_logo} alt="Coal Ministry Logo" className="logo-img me-2" />
+        <img src={coal_logo} alt="Coal Ministry Logo" className="logo-img me-2 px-8" />
         
       </a>
       <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span className="navbar-toggler-icon"></span>
       </button>
-      <div className="collapse navbar-collapse" id="navbarNav">
+      <div className="" id="navbarNav">
         <ul className="navbar-nav ms-auto">
           <Taskbar_names label="Home" />
           <Taskbar_names label="Attendance" />
