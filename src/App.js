@@ -3,6 +3,9 @@ import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
+import Test from './test.js';
+
+
 import Navbar1 from './components/Navbar1.js'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './Navbar';
@@ -11,7 +14,9 @@ const App = () => {
   return (
     <div>
     <Navbar1/>
-    <Router>
+    <Test/>
+    
+      <Router>
       <div className="flex min-h-screen bg-gray-100">
         <Navbar />
         <main className="flex-1 bg-white">
