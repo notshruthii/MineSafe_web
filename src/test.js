@@ -5,7 +5,7 @@ import { color } from "three/tsl";
 import { RGBADepthPacking } from "three";
 import { rgbShift } from "three/examples/jsm/tsl/display/RGBShiftNode.js";
 
-export default function App() {
+export default function LandingPage() {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
