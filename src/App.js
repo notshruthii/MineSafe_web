@@ -2,7 +2,7 @@ import React from 'react';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-<<<<<<< HEAD
+
 import Navbar1 from './components/Navbar1.js'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './Navbar';
@@ -26,16 +26,7 @@ const App = () => {
       </div>
     </Router>
     </div>
-=======
-import Navbar from './components/Navbar1.js'
 
-const App = () => {
-  return (
-    <div>
-      <Navbar/>
-        </div>
->>>>>>> 07176354d922eab2f9208a8f47cf4ceffa3649af
-  );
-};
+  )}
 
 export default App;
