@@ -3,18 +3,17 @@ import React from 'react';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar1 from './components/Navbar1';
-import Navbar from './Navbar';
-import Header from './Header';
-
 import StartShift from './pages/StartShift';
 import SafetyTools from './pages/SafetyTools';
 import TaskLogging from './pages/TaskLogging';
 import EndShift from './pages/EndShift';
 import Logout from './pages/Logout';
 
+
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar1 from './components/Navbar1';
+import Navbar from './Navbar';
+import Header from './Header';
 const App = () => {
   return (
     <div>
