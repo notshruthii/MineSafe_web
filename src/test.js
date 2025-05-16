@@ -4,8 +4,10 @@ import { DiBlackberry } from "react-icons/di";
 import { color } from "three/tsl";
 import { RGBADepthPacking } from "three";
 import { rgbShift } from "three/examples/jsm/tsl/display/RGBShiftNode.js";
+import { useNavigate } from 'react-router-dom';
 
 export default function LandingPage() {
+   const navigate = useNavigate();
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -40,7 +42,7 @@ export default function LandingPage() {
               }}
             >
               <button className="btn btn-light px-4 py-2 fw-semibold rounded-pill">Go to Dashbaord</button>
-              <button className="btn btn-outline-light px-4 py-2 fw-semibold rounded-pill">Safety Guidelines</button>
+              <button  onClick={() => navigate('/safety-guidelines')} className="btn btn-outline-light px-4 py-2 fw-semibold rounded-pill">Safety Guidelines</button>
             </div>
           </div>
 <div
