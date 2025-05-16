@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
@@ -12,27 +12,19 @@ const generateMonthlyAttendance = () => {
   }));
 };
 
-// Helper arrays for random zone and shift
-const zones = ['Zone A', 'Zone B', 'Zone C', 'Zone D', 'Zone E'];
-const shifts = ['6:00 AM - 2:00 PM', '2:00 PM - 10:00 PM', '10:00 PM - 6:00 AM'];
-
 const Header = () => {
-  const [attendanceData, setAttendanceData] = useState(generateMonthlyAttendance());
-  const [zone, setZone] = useState(zones[Math.floor(Math.random() * zones.length)]);
-  const [shift, setShift] = useState(shifts[Math.floor(Math.random() * shifts.length)]);
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
 
-  // Live clock
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date().toLocaleTimeString());
-    }, 1000);
-    return () => clearInterval(interval);
+    }, 1000); // update every second
+
+    return () => clearInterval(interval); // cleanup on unmount
   }, []);
 
   return (
     <div className="relative min-h-screen flex items-center justify-center text-white">
-
       {/* Background */}
       <div
         className="absolute inset-0 z-0"
@@ -53,15 +45,15 @@ const Header = () => {
 
         {/* Left side: Attendance Graph */}
         <div className="h-64">
-          <h2 className="text-xl font-semibold text-center mb-4">Monthly Attendance</h2>
+          <h2 className="text-xl font-semibold text-center mb-4">Attendance Overview</h2>
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={attendanceData}>
+            <BarChart data={attendanceData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" stroke="#ccc" />
-              <YAxis domain={[0, 1]} ticks={[0, 0.5, 1]} />
+              <XAxis dataKey="day" stroke="#ccc" />
+              <YAxis domain={[0, 1]} ticks={[0, 1]} />
               <Tooltip />
-              <Line type="monotone" dataKey="attendance" stroke="#34d399" strokeWidth={3} dot={{ r: 4 }} />
-            </LineChart>
+              <Bar dataKey="attendance" fill="#34d399" radius={[4, 4, 0, 0]} />
+            </BarChart>
           </ResponsiveContainer>
         </div>
 
@@ -73,8 +65,8 @@ const Header = () => {
             className="w-28 h-28 mx-auto mb-4"
           />
           <h1 className="text-4xl font-bold text-white drop-shadow mb-2">Sharanya Gupta</h1>
-          <p className="text-lg"><strong>Shift Time:</strong> {shift}</p>
-          <p className="text-lg"><strong>Zone Assigned:</strong> {zone}</p>
+          <p className="text-lg"><strong>Shift Time:</strong> 6:00 AM - 2:00 PM</p>
+          <p className="text-lg"><strong>Zone Assigned:</strong>Zone A</p>
           <p className="text-sm text-gray-200 mt-4">{currentTime}</p>
         </div>
       </div>
