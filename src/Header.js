@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 
-const attendanceData = [
-  { day: 'Mon', attendance: 0.5 },
-  { day: 'Tue', attendance: 1 },
-  { day: 'Wed', attendance: 0 },
-  { day: 'Thu', attendance: 0.6 },
-  { day: 'Fri', attendance: 1 },
-  { day: 'Sat', attendance: 0.7 },
-  { day: 'Sun', attendance: 0 },
-];
+// Helper function to generate random attendance values
+const generateMonthlyAttendance = () => {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return months.map(month => ({
+    month,
+    attendance: parseFloat((Math.random()).toFixed(2)),
+  }));
+};
 
 const Header = () => {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
