@@ -1,70 +1,60 @@
 // src/App.js
 
-import React from 'react';
-import './index.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Header from "./Header";
+         
+import Navbar1 from "./components/Navbar1"; 
+import Navbar from "./Navbar";   // Sidebar or secondary navbar
 
-import Navbar1 from './components/Navbar1';
-import Navbar from './Navbar';
-import LandingPage from './LandingPage1';
-import Test from './Test';
+import LandingPage from "./LandingPage1";
+import WorkersLogin from "./WorkersLogin";
 
-import StartShift from './pages/StartShift';
-import SafetyTools from './pages/SafetyTools';
-import TaskLogging from './pages/TaskLogging';
-import EndShift from './pages/EndShift';
-import Logout from './pages/Logout';
+import StartShift from "./pages/StartShift";
+import TaskLogging from "./pages/TaskLogging";
+import EndShift from "./pages/EndShift";
+import SafetyTools from "./pages/SafetyTools";
+import Logout from "./pages/Logout";
 
-import WorkersLogin from './WorkersLogin';
-import Safety from './Safety_guidelines';
+import Test from "./test";
+import SafetyGuidelines from "./Safety_guidelines";
+
+import "./App.css";
 
 const App = () => {
   return (
     <div
-      className="min-h-screen"
-      style={{
-        backgroundImage: "url('/coal.jpg')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
+      className="min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "url('/coal.png')" }}
     >
       <Router>
+        {/* Top navigation bar */}
+        <Navbar />
+
+        {/* Sidebar or secondary navbar */}
         <Navbar1 />
-        <div className="flex min-h-screen bg-black/50 backdrop-blur-sm">
-          <Navbar />
-          <main className="flex-1 text-white">
-            <Routes>
-              {/* Landing and Dashboard */}
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/dashboard" element={<Test />} />
 
-              {/* Other pages */}
-              <Route path="/attendance" element={<div className="p-6">Attendance Page</div>} />
-              <Route path="/profile" element={<div className="p-6">Profile Page</div>} />
-              <Route path="/help" element={<div className="p-6">Help Page</div>} />
-              <Route path="/logout" element={<Logout />} />
+        <Routes>
+          <Route path="/" element={<Test />} />
+          <Route path="/dashboard" element={<LandingPage />} />
+          <Route path="/workers-login" element={<WorkersLogin />} />
+          <Route path="/login" element={<Header />} />
 
-              {/* Shift management */}
-              <Route path="/start-shift" element={<StartShift />} />
-              <Route path="/safety-tools" element={<SafetyTools />} />
-              <Route path="/task-logging" element={<TaskLogging />} />
-              <Route path="/end-shift" element={<EndShift />} />
+          <Route path="/start-shift" element={<StartShift />} />
+          <Route path="/task-logging" element={<TaskLogging />} />
+          <Route path="/end-shift" element={<EndShift />} />
+          <Route path="/safety-tools" element={<SafetyTools />} />
+          <Route path="/logout" element={<Logout />} />
 
-              {/* Worker login */}
-              <Route path="/worker-login" element={<WorkersLogin />} />
-
-              {/* Safety guidelines */}
-              <Route path="/safety-guidelines" element={<Safety />} />
-            </Routes>
-          </main>
-        </div>
+          <Route path="/safety-guidelines" element={<SafetyGuidelines />} />
+        </Routes>
       </Router>
     </div>
   );
 };
 
 export default App;
+
+
+

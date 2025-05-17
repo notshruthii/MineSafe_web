@@ -1,5 +1,3 @@
-// src/test.js
-
 import React, { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +13,7 @@ const Test = () => {
   return (
     <div className="text-light min-vh-100 d-flex flex-column px-4" style={{ backgroundColor: "#1A1A1A" }}>
       <main className="d-flex justify-content-between align-items-center flex-grow-1 py-5">
+
         {/* Left: Welcome section */}
         <div
           className="w-50"
@@ -32,8 +31,9 @@ const Test = () => {
           <p className="lead text-secondary mb-4">
             Manage your attendance, tasks, safety reports, and shift handovers — all in one place.
           </p>
+
           <div
-            className="d-flex gap-3"
+            className="d-flex gap-3 flex-wrap"
             style={{
               opacity: loaded ? 1 : 0,
               transform: loaded ? "translateY(0)" : "translateY(30px)",
@@ -64,7 +64,7 @@ const Test = () => {
             minHeight: "300px",
             border: "2px solid rgba(255, 255, 255, 0.73)",
             borderRadius: "12px",
-            boxShadow: "0 0 10px 1px rgba(255, 255, 255, 3)",
+            boxShadow: "0 0 10px 1px rgba(255, 255, 255, 0.3)",
             color: "white",
             padding: "20px",
             fontWeight: "600",
@@ -73,7 +73,7 @@ const Test = () => {
             flexDirection: "column",
             justifyContent: "flex-start",
             textAlign: "left",
-            backgroundColor: "transparent",
+            backgroundColor: "black",
           }}
         >
           <div style={{ fontSize: "1.3rem", fontWeight: "650", marginBottom: "18px" }}>
