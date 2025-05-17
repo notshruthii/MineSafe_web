@@ -9,7 +9,7 @@ The problem statement that MineSafe aims to address is to create a platform that
 	Empowering supervisors to oversee real-time safety and worker activity.<br>
 	Improving worker experience through accessible dashboards and voice-assisted form filling.<br><br>
 
-<h3>Features:<h3>
+<h3>Features:</h3>h3>
 	Landing page for supervisors and workers.<br>
 	Login portal for workers.<br>
 	Voice assistance to help workers fill forms during shift handover.<br>
