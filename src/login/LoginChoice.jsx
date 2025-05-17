@@ -8,11 +8,10 @@ const LoginChoice = () => {
   return (
     <div className="container">
       <h1>Welcome to MineSafe</h1>
-      <button onClick={() => navigate("/worker-login")}>Login as Worker</button>
-      <button onClick={() => navigate("/manager-login")}>Login as Manager</button>
+      <button onClick={() => navigate("/workerlogin")}>Login as Worker</button>
+      <button onClick={() => navigate("/managerlogin")}>Login as Manager</button>
     </div>
   );
 };
 
 export default LoginChoice;
-

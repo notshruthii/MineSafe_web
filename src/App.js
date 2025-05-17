@@ -1,51 +1,60 @@
 // src/App.js
-import React from 'react';
-import './index.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
-import StartShift from './pages/StartShift';
-import SafetyTools from './pages/SafetyTools';
-import TaskLogging from './pages/TaskLogging';
-import EndShift from './pages/EndShift';
-import Logout from './pages/Logout';
-import LoginChoice from './pages/LoginChoice';
-import WorkerLogin from './pages/WorkerLogin';
-import ManagerLogin from './pages/ManagerLogin';
 
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+import Header from "./Header";
+         
+import Navbar1 from "./components/Navbar1"; 
+import Navbar from "./Navbar";   // Sidebar or secondary navbar
 
-import Test from './test.js';
-import Navbar1 from './components/Navbar1.js'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './Navbar';
-import Header from './Header';
+import LandingPage from "./LandingPage1";
+import WorkersLogin from "./WorkersLogin";
+
+import StartShift from "./pages/StartShift";
+import TaskLogging from "./pages/TaskLogging";
+import EndShift from "./pages/EndShift";
+import SafetyTools from "./pages/SafetyTools";
+import Logout from "./pages/Logout";
+
+import Test from "./test";
+import SafetyGuidelines from "./Safety_guidelines";
+
+import "./App.css";
+
 const App = () => {
   return (
-    <div>
-    <Navbar1/>
-    <Test/>
-    
+    <div
+      className="min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "url('/coal.png')" }}
+    >
       <Router>
-      <div className="flex min-h-screen bg-gray-100">
+        {/* Top navigation bar */}
         <Navbar />
-        <main className="flex-1 bg-white">
-          <Routes>
-            <Route path="/" element={<Header />} />
-            <Route path="/attendance" element={<div className="p-6">Attendance Page</div>} />
-            <Route path="/profile" element={<div className="p-6">Profile Page</div>} />
-            <Route path="/help" element={<div className="p-6">Help Page</div>} />
-            <Route path="/logout" element={<div className="p-6">Logout Page</div>} />
-            <Route path="/login" element={<LoginChoice />} />
-            <Route path="/worker-login" element={<WorkerLogin />} />
-            <Route path="/manager-login" element={<ManagerLogin />} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+
+        {/* Sidebar or secondary navbar */}
+        <Navbar1 />
+
+        <Routes>
+          <Route path="/" element={<Test />} />
+          <Route path="/dashboard" element={<LandingPage />} />
+          <Route path="/workers-login" element={<WorkersLogin />} />
+          <Route path="/login" element={<Header />} />
+
+          <Route path="/start-shift" element={<StartShift />} />
+          <Route path="/task-logging" element={<TaskLogging />} />
+          <Route path="/end-shift" element={<EndShift />} />
+          <Route path="/safety-tools" element={<SafetyTools />} />
+          <Route path="/logout" element={<Logout />} />
+
+          <Route path="/safety-guidelines" element={<SafetyGuidelines />} />
+        </Routes>
+      </Router>
     </div>
   );
 };
 
 export default App;
+
 
 
