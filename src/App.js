@@ -1,25 +1,13 @@
 // src/App.js
-
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
-import Header from "./Header";
-         
+import { Routes, Route } from "react-router-dom";
+import Header from "./Header.js";
 import Navbar1 from "./components/Navbar1"; 
-import Navbar from "./Navbar";   // Sidebar or secondary navbar
-import WorkerDash from './WorkersDashboard.js';
 import LandingPage from "./LandingPage1";
-import WorkersLogin from "./WorkersLogin";
-
-import StartShift from "./pages/StartShift";
-import TaskLogging from "./pages/TaskLogging";
-import EndShift from "./pages/EndShift";
-import SafetyTools from "./pages/SafetyTools";
-import Logout from "./pages/Logout";
-
-import Test from "./test";
+import WorkerDash from './WorkersDashboard.js';
 import SafetyGuidelines from "./Safety_guidelines";
-
+import Test from "./test";
+import WorkersLogin from "./WorkersLogin.jsx";
 import "./App.css";
 
 const App = () => {
@@ -28,26 +16,19 @@ const App = () => {
       className="min-h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/coal.png')" }}
     >
-      <Router>
-        {/* Top navigation bar */}
-        <Navbar1 />
+      <Navbar1 />
 
-        {/* Sidebar or secondary navbar */}
-        {/* <Navbar /> */}
+     <Routes>
+  <Route path="/" element={<Test />} />
+  <Route path="/dashboard" element={<LandingPage />} />
+  <Route path="/safety-guidelines" element={<SafetyGuidelines />} />
+  <Route path="/workers-login" element={<WorkersLogin />} />
+  <Route path="/worker-dashboard" element={<Header />} />
+  <Route path="/workers/*" element={<WorkerDash />} />
+</Routes>
 
-        <Routes>
-          <Route path="/" element={<Test />} />
-          <Route path="/dashboard" element={<LandingPage />} />
-         <Route path="/*" element={<WorkerDash />} />
-
-          <Route path="/safety-guidelines" element={<SafetyGuidelines />} />
-        </Routes>
-      </Router>
     </div>
   );
 };
 
 export default App;
-
-
-

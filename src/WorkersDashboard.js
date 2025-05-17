@@ -1,4 +1,4 @@
-
+// src/WorkersDashboard.js
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
@@ -16,16 +16,16 @@ const WorkerDash = () => {
   return (
     <Routes>
       {/* Routes WITHOUT sidebar */}
-      <Route path="/" element={<Header />} />
-      <Route path="/workers-login" element={<WorkersLogin />} />
+      <Route path="workers-login" element={<WorkersLogin />} />
+      <Route path="" element={<Header />} /> {/* this catches / */}
 
       {/* Routes WITH sidebar */}
       <Route element={<WorkerLayout />}>
-        <Route path="/start-shift" element={<StartShift />} />
-        <Route path="/task-logging" element={<TaskLogging />} />
-        <Route path="/end-shift" element={<EndShift />} />
-        <Route path="/safety-tools" element={<SafetyTools />} />
-        <Route path="/logout" element={<Logout />} />
+        <Route path="start-shift" element={<StartShift />} />
+        <Route path="task-logging" element={<TaskLogging />} />
+        <Route path="end-shift" element={<EndShift />} />
+        <Route path="safety-tools" element={<SafetyTools />} />
+        <Route path="logout" element={<Logout />} />
       </Route>
     </Routes>
   );

@@ -16,7 +16,7 @@ const WorkersLogin = () => {
 
     if (email === validEmail && password === validPassword) {
       setError('');
-      navigate('/login'); // Adjust this path to your Header route
+      navigate('/worker-dashboard'); // Adjust this path to your Header route
     } else {
       setError('Invalid email or password');
     }
