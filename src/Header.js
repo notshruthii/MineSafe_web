@@ -50,7 +50,17 @@ const Header = () => {
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={attendanceData}>
               <CartesianGrid strokeDasharray="3 3" />
+
               <XAxis dataKey="month" stroke="#ccc" />
+
+              <XAxis
+                dataKey="month"
+                stroke="#ccc"
+                angle={-45}
+                textAnchor="end"
+                height={60}
+                tick={{ fontSize: 12 }}
+              />
               <YAxis domain={[0, 1]} ticks={[0, 0.25, 0.5, 0.75, 1]} />
               <Tooltip />
               <Line type="monotone" dataKey="attendance" stroke="#34d399" strokeWidth={3} dot={{ r: 5 }} />
@@ -88,4 +98,3 @@ const Header = () => {
 };
 
 export default Header;
-
