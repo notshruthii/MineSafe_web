@@ -7,7 +7,7 @@ import Header from "./Header";
          
 import Navbar1 from "./components/Navbar1"; 
 import Navbar from "./Navbar";   // Sidebar or secondary navbar
-
+import WorkerDash from './WorkersDashboard.js';
 import LandingPage from "./LandingPage1";
 import WorkersLogin from "./WorkersLogin";
 
@@ -30,22 +30,15 @@ const App = () => {
     >
       <Router>
         {/* Top navigation bar */}
-        <Navbar />
+        <Navbar1 />
 
         {/* Sidebar or secondary navbar */}
-        <Navbar1 />
+        {/* <Navbar /> */}
 
         <Routes>
           <Route path="/" element={<Test />} />
           <Route path="/dashboard" element={<LandingPage />} />
-          <Route path="/workers-login" element={<WorkersLogin />} />
-          <Route path="/login" element={<Header />} />
-
-          <Route path="/start-shift" element={<StartShift />} />
-          <Route path="/task-logging" element={<TaskLogging />} />
-          <Route path="/end-shift" element={<EndShift />} />
-          <Route path="/safety-tools" element={<SafetyTools />} />
-          <Route path="/logout" element={<Logout />} />
+         <Route path="/*" element={<WorkerDash />} />
 
           <Route path="/safety-guidelines" element={<SafetyGuidelines />} />
         </Routes>

@@ -19,7 +19,7 @@ const Navbar = () => {
 
       <nav className="flex flex-col gap-3">
         <NavLink
-          to="/startshift"
+          to="/start-shift"
           className={({ isActive }) =>
             `flex items-center gap-3 py-2 px-3 rounded-md text-sm font-medium ${isActive ? 'bg-gray-200' : 'hover:bg-gray-100'}`
           }
@@ -29,7 +29,7 @@ const Navbar = () => {
         </NavLink>
 
         <NavLink
-          to="/attendance"
+          to="/safety-tools"
           className={({ isActive }) =>
             `flex items-center gap-3 py-2 px-3 rounded-md text-sm font-medium ${isActive ? 'bg-gray-200' : 'hover:bg-gray-100'}`
           }
@@ -39,7 +39,7 @@ const Navbar = () => {
         </NavLink>
 
         <NavLink
-          to="/profile"
+          to="/task-logging"
           className={({ isActive }) =>
             `flex items-center gap-3 py-2 px-3 rounded-md text-sm font-medium ${isActive ? 'bg-gray-200' : 'hover:bg-gray-100'}`
           }
@@ -49,7 +49,7 @@ const Navbar = () => {
         </NavLink>
 
         <NavLink
-          to="/help"
+          to="/end-shift"
           className={({ isActive }) =>
             `flex items-center gap-3 py-2 px-3 rounded-md text-sm font-medium ${isActive ? 'bg-gray-200' : 'hover:bg-gray-100'}`
           }
