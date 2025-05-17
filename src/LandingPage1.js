@@ -8,12 +8,15 @@ const LandingPage1 = () => {
 
   return (
     <div
-      className="min-h-screen flex flex-col justify-center items-center"
-      style={{ backgroundColor: '#1A1A1A', color: '#fff' }}
+      className="min-h-screen flex flex-col justify-start items-center "
+      style={{ backgroundColor: '#1A1A1A', color: '#fff',paddingTop:"-20px" }}
     >
-      <h1 className="text-4xl font-bold mb-10 text-center">
+      <h1 className="text-4xl font-bold mb-3 text-center " style={{marginTop:"99px"}} >
         Welcome to Coal Mine Dashboard
       </h1>
+      <p className="text-lg text-gray-400 mb-9">
+          Monitor, Manage, and Mobilize Mining Operations
+        </p>
       
       <div className="flex space-x-6">
         <button

@@ -3,22 +3,22 @@ import { useNavigate } from 'react-router-dom';
 
 const WorkersLogin = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
+  const [employeeId, setEmployeeId] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
-  const validEmail = 'palakjain444@gmail.com';
+  const validEmp = '1234';
   const validPassword = 'qwerty@1234';
 
   const handleLogin = (e) => {
     e.preventDefault();
 
-    if (email === validEmail && password === validPassword) {
+    if (employeeId === validEmp && password === validPassword) {
       setError('');
-      navigate('/worker-dashboard'); // Adjust this path to your Header route
+      navigate('/worker-dashboard');
     } else {
-      setError('Invalid email or password');
+      setError('Invalid Employee ID or password');
     }
   };
 
@@ -32,17 +32,17 @@ const WorkersLogin = () => {
 
         <form onSubmit={handleLogin}>
           <div className="mb-4">
-            <label className="block mb-1 font-medium" htmlFor="email">
-              Email ID
+            <label className="block mb-1 font-medium" htmlFor="employeeId">
+              Employee ID
             </label>
             <input
-              type="email"
-              id="email"
+              type="text"
+              id="employeeId"
               required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={employeeId}
+              onChange={(e) => setEmployeeId(e.target.value)}
               className="w-full px-4 py-2 bg-black border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              placeholder="Enter your email"
+              placeholder="Enter your Employee ID"
             />
           </div>
 
@@ -100,5 +100,3 @@ const WorkersLogin = () => {
 };
 
 export default WorkersLogin;
-
-

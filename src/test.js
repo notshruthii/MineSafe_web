@@ -61,7 +61,7 @@ const Test = () => {
             marginRight: "7rem",
             marginTop: "-4rem",
             width: "330px",
-            minHeight: "300px",
+            minHeight: "350px",
             border: "2px solid rgba(255, 255, 255, 0.73)",
             borderRadius: "12px",
             boxShadow: "0 0 10px 1px rgba(255, 255, 255, 0.3)",
@@ -73,7 +73,8 @@ const Test = () => {
             flexDirection: "column",
             justifyContent: "flex-start",
             textAlign: "left",
-            backgroundColor: "black",
+            backgroundColor: "transparent",
+            backdropFilter: "blur(10px)",  
           }}
         >
           <div style={{ fontSize: "1.3rem", fontWeight: "650", marginBottom: "18px" }}>
