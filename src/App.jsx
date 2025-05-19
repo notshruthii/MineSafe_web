@@ -1,11 +1,11 @@
 // src/App.js
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Header from "./Header.js";
+import Header from "./Header.jsx";
 import Navbar1 from "./components/Navbar1"; 
-import LandingPage from "./LandingPage1";
-import WorkerDash from './WorkersDashboard.js';
-import SafetyGuidelines from "./Safety_guidelines";
+import LandingPage from "./Landingpage1.jsx";
+import WorkerDash from './WorkersDashboard.jsx';
+import SafetyGuidelines from "./Safety_guidelines.jsx";
 import Test from "./test";
 import WorkersLogin from "./WorkersLogin.jsx";
 import "./App.css";

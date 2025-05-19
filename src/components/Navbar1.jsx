@@ -1,4 +1,4 @@
-import Taskbar_names from './Taskbar_names.js';
+import Taskbar_names from './Taskbar_names.jsx';
 import React from 'react';
 import coal_logo from "./coal3.png"; 
 const Navbar=()=>{
