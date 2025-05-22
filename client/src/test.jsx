@@ -11,7 +11,13 @@ const Test = () => {
   }, []);
 
   return (
-    <div className="text-light min-vh-100 d-flex flex-column px-4" style={{ backgroundColor: "#1A1A1A" }}>
+    <div
+      className="min-vh-100 d-flex flex-column px-4"
+      style={{
+        backgroundColor: "#556B2F", // Olive Green
+        color: "#E3DAC9",           // Bone text
+      }}
+    >
       <main className="d-flex justify-content-between align-items-center flex-grow-1 py-5">
 
         {/* Left: Welcome section */}
@@ -28,7 +34,7 @@ const Test = () => {
           <h1 className="display-5 fw-bold mb-3">
             Welcome to MineSafe -<br />Coal Mine Operations Portal
           </h1>
-          <p className="lead text-secondary mb-4">
+          <p className="lead mb-4" style={{ color: "#F5F5DC" }}>
             Manage your attendance, tasks, safety reports, and shift handovers — all in one place.
           </p>
 
@@ -42,13 +48,24 @@ const Test = () => {
           >
             <button
               onClick={() => navigate('/dashboard')}
-              className="btn btn-light px-4 py-2 fw-semibold rounded-pill"
+              className="px-4 py-2 fw-semibold rounded-pill"
+              style={{
+                backgroundColor: "#FFFFFF",  // White
+                color: "#556B2F",            // Olive Green text
+                border: "2px solid #556B2F"
+              }}
             >
               Go to Dashboard
             </button>
+
             <button
               onClick={() => navigate('/safety-guidelines')}
-              className="btn btn-outline-light px-4 py-2 fw-semibold rounded-pill"
+              className="px-4 py-2 fw-semibold rounded-pill"
+              style={{
+                backgroundColor: "#FFFFFF",  // White
+                color: "#556B2F",            // Olive Green text
+                border: "2px solid #556B2F"
+              }}
             >
               Safety Guidelines
             </button>
@@ -62,10 +79,10 @@ const Test = () => {
             marginTop: "-4rem",
             width: "330px",
             minHeight: "350px",
-            border: "2px solid rgba(255, 255, 255, 0.73)",
+            border: "2px solid #E3DAC9",
             borderRadius: "12px",
-            boxShadow: "0 0 10px 1px rgba(255, 255, 255, 0.3)",
-            color: "white",
+            boxShadow: "0 0 10px 1px rgba(0, 0, 0, 0.2)",
+            color: "#E3DAC9",  // Bone text
             padding: "20px",
             fontWeight: "600",
             fontSize: "1rem",
@@ -73,8 +90,8 @@ const Test = () => {
             flexDirection: "column",
             justifyContent: "flex-start",
             textAlign: "left",
-            backgroundColor: "transparent",
-            backdropFilter: "blur(10px)",  
+            backgroundColor: "rgba(255, 255, 255, 0.05)",  // subtle translucent box
+            backdropFilter: "blur(10px)",
           }}
         >
           <div style={{ fontSize: "1.3rem", fontWeight: "650", marginBottom: "18px" }}>
@@ -98,6 +115,7 @@ const Test = () => {
 };
 
 export default Test;
+
 
 
 
