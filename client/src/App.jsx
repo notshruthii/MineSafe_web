@@ -3,6 +3,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Header from "./Header.jsx";
 import Navbar1 from "./components/Navbar1"; 
+import AttendanceApp from "./Attendance.jsx";
 import LandingPage from "./Landingpage1.jsx";
 import WorkerDash from './WorkersDashboard.jsx';
 import SafetyGuidelines from "./Safety_guidelines.jsx";
@@ -25,6 +26,7 @@ const App = () => {
   <Route path="/workers-login" element={<WorkersLogin />} />
   <Route path="/worker-dashboard" element={<Header />} />
   <Route path="/workers/*" element={<WorkerDash />} />
+  <Route path="/Attendance" element={<AttendanceApp />} />
 </Routes>
 
     </div>
