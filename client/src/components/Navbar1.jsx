@@ -13,13 +13,13 @@ const Navbar=()=>{
       </button>
       <div className="" id="navbarNav">
         <ul className="navbar-nav ms-auto">
-          <Taskbar_names label="Home" />
-          <Taskbar_names label="Attendance" />
-          <Taskbar_names label="Tasks" />
-          <Taskbar_names label="Report" />
-          <Taskbar_names label="Profile" />
-          <Taskbar_names label="Help" />
-          <Taskbar_names label="Logout" className="text-danger" />
+          <Taskbar_names label="Home" to="/" />
+          <Taskbar_names label="Attendance" to="/attendance" />
+          <Taskbar_names label="Tasks" to="/tasks" />
+          <Taskbar_names label="Report" to="/report" />
+          <Taskbar_names label="Profile" to="/profile" />
+          <Taskbar_names label="Help" to="/help" />
+          <Taskbar_names label="Logout" to="/logout" className="text-danger" />
         </ul>
       </div>
     </nav>

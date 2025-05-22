@@ -1,13 +1,15 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-const Taskbar_names = ({ label, href = "#", className = "" }) => {
+const Taskbar_names = ({ label, to = "#", className = "" }) => {
   return (
     <li className="nav-item">
-      <a className={`nav-link px-4 ${className}`} href={href}>
+      <Link className={`nav-link px-4 ${className}`} to={to}>
         {label}
-      </a>
+      </Link>
     </li>
   );
 };
 
 export default Taskbar_names;
+

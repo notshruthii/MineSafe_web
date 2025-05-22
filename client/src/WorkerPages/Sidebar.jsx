@@ -25,7 +25,7 @@ const Navbar = () => {
           }
         >
           <FaClock />
-          {isOpen && 'Start Shift'}
+          {isOpen && 'Start-Shift'}
         </NavLink>
 
         <NavLink
