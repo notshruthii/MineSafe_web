@@ -7,7 +7,7 @@ const WorkerLayout = () => {
   return (
     <div className="flex min-h-screen">
       <Navbar />
-      <div className="flex-grow p-4 bg-cover bg-center" style={{ backgroundImage: "url('/coal.png')" }}>
+      <div className="flex-grow p-4 bg-cover bg-center" style={{ backgroundColor:"#1A1A1A" }}>
         <Outlet />
       </div>
     </div>

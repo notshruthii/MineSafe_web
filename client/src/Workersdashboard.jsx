@@ -17,7 +17,7 @@ const WorkerDash = () => {
     <Routes>
       {/* Routes WITHOUT sidebar */}
       <Route path="workers-login" element={<WorkersLogin />} />
-      <Route path="" element={<Header />} /> {/* this catches / */}
+      <Route path="" element={<Header />} /> 
 
       {/* Routes WITH sidebar */}
       <Route element={<WorkerLayout />}>
