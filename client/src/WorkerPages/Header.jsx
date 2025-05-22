@@ -5,7 +5,7 @@ import {
 
 import { useNavigate } from 'react-router-dom';
 
-import Navbar from './Navbar';
+import Navbar from './Sidebar';
 
 const generateMonthlyAttendance = () => {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];

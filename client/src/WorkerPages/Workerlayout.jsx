@@ -1,6 +1,6 @@
 // src/WorkerLayout.js
 import React from "react";
-import Navbar from "./Navbar";
+import Navbar from "./Sidebar";
 import { Outlet } from "react-router-dom";
 
 const WorkerLayout = () => {

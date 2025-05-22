@@ -1,14 +1,14 @@
 // src/App.js
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Header from "./Header.jsx";
+import Header from "./WorkerPages/Header.jsx";
 import Navbar1 from "./components/Navbar1"; 
-import AttendanceApp from "./Attendance.jsx";
-import LandingPage from "./Landingpage1.jsx";
-import WorkerDash from './WorkersDashboard.jsx';
-import SafetyGuidelines from "./Safety_guidelines.jsx";
-import Test from "./test";
-import WorkersLogin from "./WorkersLogin.jsx";
+import AttendanceApp from "./LandingPage/NavbarComponents/Attendance.jsx";
+import LandingPage from "./login/Landingpage1.jsx";
+import WorkerDash from './WorkerPages/Workersdashboard.jsx';
+import SafetyGuidelines from "./LandingPage/Safety_guidelines.jsx";
+import Test from "./LandingPage/FirstPage.jsx";
+import WorkersLogin from "./WorkerPages/WorkersLogin.jsx";
 import "./App.css";
 
 const App = () => {
