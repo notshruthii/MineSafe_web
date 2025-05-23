@@ -1,128 +1,160 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-const ManagerDashboard = () => {
-  const [workers, setWorkers] = useState([
-    { id: "CM001", name: "John Miner", role: "Miner", shift: "Morning", location: "Zone A", healthStatus: "Healthy", safetyCompliance: "Compliant" },
-    { id: "CM002", name: "Jane Safety", role: "Safety Officer", shift: "Night", location: "Shaft 3", healthStatus: "Healthy", safetyCompliance: "Compliant" },
-  ]);
-  const [search, setSearch] = useState("");
-  const [formData, setFormData] = useState({});
-  const [editing, setEditing] = useState(false);
-  const [showForm, setShowForm] = useState(false);
+const getRandom = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-  const filtered = workers.filter(
-    w => w.name.toLowerCase().includes(search.toLowerCase()) || w.id.toLowerCase().includes(search.toLowerCase())
-  );
+const sampleWorkers = [
+  { id: 1, name: 'Amit Singh', role: 'Driller' },
+  { id: 2, name: 'Ravi Kumar', role: 'Supervisor' },
+  { id: 3, name: 'Sanjay Verma', role: 'Loader' },
+  { id: 4, name: 'Deepak Rawat', role: 'Blaster' },
+];
 
-  const openForm = (worker = {}) => {
-    setFormData(worker);
-    setEditing(!!worker.id);
-    setShowForm(true);
-  };
+const generateShiftReport = (name) => ({
+  hoursWorked: getRandom(6, 12),
+  tasksCompleted: getRandom(2, 8),
+  incidents: getRandom(0, 2),
+  notes: `Performance of ${name} was ${["excellent", "satisfactory", "needs improvement"][getRandom(0, 2)]}.`,
+});
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    if (editing) {
-      setWorkers(ws => ws.map(w => (w.id === formData.id ? formData : w)));
-    } else {
-      if (workers.find(w => w.id === formData.id)) return alert("ID must be unique");
-      setWorkers(ws => [...ws, formData]);
-    }
-    setShowForm(false);
-  };
+export default function ManagerDashboard() {
+  const [selectedWorker, setSelectedWorker] = useState(null);
+  const [shiftReport, setShiftReport] = useState(null);
 
-  const deleteWorker = id => {
-    if (window.confirm("Delete worker?")) {
-      setWorkers(ws => ws.filter(w => w.id !== id));
-    }
+  const handleViewReport = (worker) => {
+    setSelectedWorker(worker);
+    setShiftReport(generateShiftReport(worker.name));
   };
 
   return (
-    <div style={{ padding: 20, fontFamily: "Arial", backgroundColor: "#222", color: "#eee", minHeight: "100vh" }}>
-      <h1>Coal Mine Manager Dashboard</h1>
-      <input
-        placeholder="Search by ID or name"
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-        style={{ padding: 6, marginBottom: 12, width: 250 }}
-      />
-      <button onClick={() => openForm()} style={{ marginLeft: 10 }}>Add Worker</button>
+    <div className="min-h-screen p-8 font-sans text-white bg-black">
+      {/* Header */}
+      <header className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Welcome back, Manager</h1>
+        <div className="flex items-center space-x-4">
+          <div>
+            <p className="text-sm font-medium">Palak jain</p>
+            <p className="text-xs text-green-500">Online</p>
+          </div>
+        </div>
+      </header>
 
-      <table style={{ width: "100%", marginTop: 20, borderCollapse: "collapse" }}>
-        <thead>
-          <tr style={{ borderBottom: "1px solid #555" }}>
-            <th>ID</th><th>Name</th><th>Role</th><th>Shift</th><th>Location</th><th>Health</th><th>Safety</th><th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filtered.length === 0 ? <tr><td colSpan={8} style={{ textAlign: "center" }}>No workers found.</td></tr> :
-            filtered.map(w => (
-              <tr key={w.id} style={{ borderBottom: "1px solid #555" }}>
-                <td>{w.id}</td><td>{w.name}</td><td>{w.role}</td><td>{w.shift}</td><td>{w.location}</td><td>{w.healthStatus}</td><td>{w.safetyCompliance}</td>
-                <td>
-                  <button onClick={() => openForm(w)} style={{ marginRight: 5 }}>Edit</button>
-                  <button onClick={() => deleteWorker(w.id)}>Delete</button>
-                </td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
+      {/* Stats */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <Card title="Total Workers" value={getRandom(100, 150)} />
+        <Card title="Shifts Today" value={getRandom(10, 20)} />
+        <Card title="Active Tasks" value={getRandom(20, 40)} />
+      </section>
 
-      {showForm && (
-        <form onSubmit={handleSubmit} style={{ marginTop: 20, background: "#333", padding: 15, borderRadius: 8 }}>
-          <input
-            placeholder="ID"
-            required
-            value={formData.id || ""}
-            disabled={editing}
-            onChange={e => setFormData({ ...formData, id: e.target.value })}
-            style={{ marginBottom: 8, width: "100%", padding: 6 }}
-          />
-          <input
-            placeholder="Name"
-            required
-            value={formData.name || ""}
-            onChange={e => setFormData({ ...formData, name: e.target.value })}
-            style={{ marginBottom: 8, width: "100%", padding: 6 }}
-          />
-          <input
-            placeholder="Role"
-            value={formData.role || ""}
-            onChange={e => setFormData({ ...formData, role: e.target.value })}
-            style={{ marginBottom: 8, width: "100%", padding: 6 }}
-          />
-          <input
-            placeholder="Shift"
-            value={formData.shift || ""}
-            onChange={e => setFormData({ ...formData, shift: e.target.value })}
-            style={{ marginBottom: 8, width: "100%", padding: 6 }}
-          />
-          <input
-            placeholder="Location"
-            value={formData.location || ""}
-            onChange={e => setFormData({ ...formData, location: e.target.value })}
-            style={{ marginBottom: 8, width: "100%", padding: 6 }}
-          />
-          <input
-            placeholder="Health Status"
-            value={formData.healthStatus || ""}
-            onChange={e => setFormData({ ...formData, healthStatus: e.target.value })}
-            style={{ marginBottom: 8, width: "100%", padding: 6 }}
-          />
-          <input
-            placeholder="Safety Compliance"
-            value={formData.safetyCompliance || ""}
-            onChange={e => setFormData({ ...formData, safetyCompliance: e.target.value })}
-            style={{ marginBottom: 8, width: "100%", padding: 6 }}
-          />
+      {/* Progress and Tracker */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-gray-800 rounded-2xl p-6 shadow">
+          <h2 className="text-lg font-semibold mb-4">Daily Shift Progress</h2>
+          <div className="flex items-center justify-between">
+            <div className="text-center">
+              <p className="text-2xl font-bold">{getRandom(6, 8)}h</p>
+              <p className="text-xs text-gray-400">Avg. Shift Duration</p>
+            </div>
+            <div className="w-24 h-24 rounded-full border-8 border-green-400 flex items-center justify-center text-xl font-bold">
+              {getRandom(60, 90)}%
+            </div>
+          </div>
+        </div>
 
-          <button type="submit" style={{ marginRight: 10 }}>{editing ? "Update" : "Add"}</button>
-          <button type="button" onClick={() => setShowForm(false)}>Cancel</button>
-        </form>
+        <div className="bg-gray-800 rounded-2xl p-6 shadow col-span-2">
+          <h2 className="text-lg font-semibold mb-4">Shift Schedule</h2>
+          <div className="grid grid-cols-5 gap-4">
+            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map((day, index) => (
+              <div key={index} className="bg-gray-700 rounded-xl p-4 text-center">
+                <p className="font-semibold">{day}</p>
+                <p className="mt-2 text-green-400">{getRandom(6, 10)} Workers</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Onboarding Task */}
+      <section className="bg-gray-800 rounded-2xl p-6 shadow mb-8">
+        <h2 className="text-lg font-semibold mb-4">Onboarding Progress</h2>
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-2xl font-bold">4/6 Tasks Completed</p>
+          <p className="text-sm text-green-400">66%</p>
+        </div>
+        <ul className="space-y-2">
+          {[
+            'ID Verification',
+            'Safety Training',
+            'Tool Orientation',
+            'Team Introduction',
+            'Coal Site Tour',
+            'Emergency Protocols',
+          ].map((task, index) => (
+            <li
+              key={index}
+              className={`flex justify-between p-3 rounded-xl ${
+                index < 4 ? 'bg-green-700' : 'bg-gray-700'
+              }`}
+            >
+              <span>{task}</span>
+              {index < 4 ? (
+                <span className="text-green-300 font-bold">✔</span>
+              ) : (
+                <span className="text-gray-400">○</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Worker Reports */}
+      <section className="bg-gray-800 rounded-2xl p-6 shadow mb-10">
+        <h2 className="text-lg font-semibold mb-4">Individual Worker Reports</h2>
+        <ul className="divide-y divide-gray-700">
+          {sampleWorkers.map((worker) => (
+            <li key={worker.id} className="flex justify-between items-center py-3">
+              <div>
+                <p className="font-semibold">{worker.name}</p>
+                <p className="text-sm text-gray-400">{worker.role}</p>
+              </div>
+              <button
+                onClick={() => handleViewReport(worker)}
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                View End Shift Report
+              </button>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Shift Report Section */}
+      {selectedWorker && shiftReport && (
+        <section className="bg-gray-800 rounded-2xl p-6 shadow-lg mb-10">
+          <h3 className="text-xl font-bold mb-2">End Shift Report</h3>
+          <p className="mb-1"><strong>Worker:</strong> {selectedWorker.name}</p>
+          <p className="mb-1"><strong>Role:</strong> {selectedWorker.role}</p>
+          <p className="mb-1"><strong>Hours Worked:</strong> {shiftReport.hoursWorked}</p>
+          <p className="mb-1"><strong>Tasks Completed:</strong> {shiftReport.tasksCompleted}</p>
+          <p className="mb-1"><strong>Incidents:</strong> {shiftReport.incidents}</p>
+          <p className="mb-3"><strong>Notes:</strong> {shiftReport.notes}</p>
+          <button
+            className="mt-2 w-full bg-red-600 text-white py-2 rounded hover:bg-red-700"
+            onClick={() => setSelectedWorker(null)}
+          >
+            Close Report
+          </button>
+        </section>
       )}
     </div>
   );
-};
+}
 
-export default ManagerDashboard;
+// Reusable card component
+const Card = ({ title, value }) => (
+  <div className="bg-gray-800 text-white rounded-2xl p-6 shadow text-center">
+    <h3 className="text-lg font-semibold">{title}</h3>
+    <p className="text-3xl font-bold mt-2">{value}</p>
+  </div>
+);
+
+
