@@ -71,7 +71,7 @@ export default function AttendanceApp() {
 
 const styles = {
   container: {
-    backgroundColor: "#000",
+    backgroundColor: "1a1a1a",
     color: "#fff",
     minHeight: "100vh",
     padding: "2rem",
