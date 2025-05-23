@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const Logout = () => {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogou= () => {
     // Clear auth/session here if needed
     navigate('/startshift');
   };
