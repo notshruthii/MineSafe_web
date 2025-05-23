@@ -7,7 +7,7 @@ const Logout = () => {
 
   const handleLogout = () => {
     // Clear auth/session here if needed
-    navigate('/starshift');
+    navigate('/startshift');
   };
 
   return (
