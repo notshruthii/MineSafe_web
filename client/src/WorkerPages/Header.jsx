@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from './Sidebar';
 
 const generateMonthlyAttendance = () => {
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'N', 'Dec'];
   return months.map(month => ({
     month,
     attendance: parseFloat((Math.random()).toFixed(2)),
