@@ -12,7 +12,7 @@ const Logout = () => {
 
   return (
     <div
-      clasName="min-h-screen bg-cover bg-center p-8"
+      className="min-h-screen bg-cover bg-center p-8"
       style={{ backgroundImage: "url('/coal.jpg')" }}
     >
       <div className="bg-white bg-opacity-90 p-6 rounded-lg shadow-md max-w-2xl mx-auto text-center">
