@@ -5,7 +5,8 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./Header";
 import WorkersLogin from "./WorkersLogin";
 import WorkerLayout from "./WorkerLayout";
-
+import ReportAbnormality from "./ReportAbnormality";
+import AttendanceApp from "./Attendance";
 import StartShift from "./pages/StartShift";
 import TaskLogging from "./pages/TaskLogging";
 import EndShift from "./pages/EndShift";
@@ -26,6 +27,8 @@ const WorkerDash = () => {
         <Route path="end-shift" element={<EndShift />} />
         <Route path="safety-tools" element={<SafetyTools />} />
         <Route path="logout" element={<Logout />} />
+        <Route path="report" element={<ReportAbnormality />} />
+        <Route path="attendance" element={<AttendanceApp />} />
       </Route>
     </Routes>
   );
