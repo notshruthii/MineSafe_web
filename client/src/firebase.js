@@ -4,9 +4,9 @@ import { getAnalytics } from "firebase/analytics";
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAlgQIYWyEkn1xAnAri5tkRDU_JgFElSgE",
-  authDomain: "minesafe-334ad.firebaseapp.com",
-  projectId: "minesafe-334ad",
+ apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
   storageBucket: "minesafe-334ad.firebasestorage.app",
   messagingSenderId: "930184991943",
   appId: "1:930184991943:web:752a83af5fb8bbed8cdae2",
