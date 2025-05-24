@@ -8,15 +8,9 @@ const Manager = require("./models/Manager.js");
 
 dotenv.config();
 
-
-
 mongoose.connect(process.env.MONGO_URL);
 .then(() => console.log('Connected to MineSafe DB'))
 .catch(err => console.error('DB connection error:', err));
-
-
-
-
 
 const managerNames = [
   'Aman Verma',
