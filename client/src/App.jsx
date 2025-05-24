@@ -10,6 +10,12 @@ import WorkersLogin from "./WorkerPages/WorkersLogin.jsx";
 import ManagersLogin from "./ManagerPages//ManagersLogin.jsx"; // ✅ Corrected path
 import ManagerDashboard from "./ManagerPages/Managerdashboard.jsx"; // ✅ Corrected path
 import AttendanceApp from "./LandingPage/NavbarComponents/Attendance.jsx";
+import News from './LandingPage/NavbarComponents/News.jsx'
+import Task from './LandingPage/NavbarComponents/Tasks.jsx'
+import Profile from './LandingPage/NavbarComponents/WorkersProfile.jsx'
+import Report from './LandingPage/NavbarComponents/ReportAbnormality.jsx'
+import Resources from './LandingPage/NavbarComponents/SafetyResources.jsx'
+
 
 import "./App.css";
 
@@ -30,6 +36,12 @@ const App = () => {
         <Route path="/workers/*" element={<WorkerDash />} />
         <Route path="/manager-dashboard" element={<ManagerDashboard />} />
         <Route path="/Attendance" element={<AttendanceApp />} />
+        <Route path="/news" element={<News />} />
+        <Route path="/task" element={<Task />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/report" element={<Report />} />
+        <Route path="/resource" element={<Resources/>}/>
+
       </Routes>
     </div>
   );
