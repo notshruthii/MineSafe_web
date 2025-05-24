@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
-import { db } from '../firebase'; 
+import React, { useState, useEffect } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 
-const TaskLogging = ({ workerId, managerId }) => {
+const TaskLogging = () => {
   const [tasksAssigned, setTasksAssigned] = useState([]);
   const [toolsIssued, setToolsIssued] = useState('');
   const [taskRemarks, setTaskRemarks] = useState('');
+  const [workerId, setWorkerId] = useState(null);
+  const [managerId, setManagerId] = useState(null);
+
+  useEffect(() => {
+    const workerData = JSON.parse(localStorage.getItem("workerData"));
+    if (workerData) {
+      setWorkerId(workerData.employeeId);
+      setManagerId(workerData.managerId || "unknownManager");
+    }
+  }, []);
 
   const handleTaskChange = (e) => {
     const options = Array.from(e.target.options);
@@ -16,17 +26,22 @@ const TaskLogging = ({ workerId, managerId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!workerId) {
+      alert("Worker ID missing. Please login.");
+      return;
+    }
+
     const payload = {
-      userId: workerId,
-      managerId,
       tasksAssigned,
       toolsIssued,
       taskRemarks,
+      managerId,
       timestamp: new Date(),
     };
 
     try {
-      await addDoc(collection(db, 'taskLogging'), payload);
+      const tasksRef = collection(db, 'workers', workerId, 'taskLogging');
+      await addDoc(tasksRef, payload);
       alert('Task logged successfully');
       setTasksAssigned([]);
       setToolsIssued('');

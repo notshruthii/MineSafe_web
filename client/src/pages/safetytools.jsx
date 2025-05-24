@@ -16,31 +16,43 @@ const SafetyTools = () => {
     setForm(prev => ({ ...prev, [name]: checked }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const payload = {
-      ...form,
-      userId: localStorage.getItem("userId") || "unknownUser",
-      managerId: localStorage.getItem("managerId") || "unknownManager",
-      timestamp: new Date(),
-    };
+  const workerData = JSON.parse(localStorage.getItem("workerData"));
+  const userId = workerData?.employeeId;
+  const managerId = workerData?.managerId || "unknownManager";
 
-    try {
-      await addDoc(collection(db, "safetyTools"), payload);
-      alert('Safety tools submitted successfully!');
-      setForm({
-        helmet: false,
-        glasses: false,
-        gloves: false,
-        boots: false,
-        vest: false
-      });
-    } catch (err) {
-      console.error("Error submitting safety tools:", err);
-      alert('Failed to submit safety tools.');
-    }
+  if (!userId) {
+    alert("Please login first.");
+    return;
+  }
+
+  const payload = {
+    ...form,
+    userId,
+    managerId,
+    timestamp: new Date(),
   };
+
+  try {
+    const safetyToolsRef = collection(db, "workers", userId, "safetyTools");
+    await addDoc(safetyToolsRef, payload);
+    alert('Safety tools submitted successfully!');
+    setForm({
+      helmet: false,
+      glasses: false,
+      gloves: false,
+      boots: false,
+      vest: false
+    });
+  } catch (err) {
+    console.error("Error submitting safety tools:", err);
+    alert('Failed to submit safety tools.');
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-cover bg-center p-8" style={{ backgroundImage: "url('/coal.jpg')" }}>

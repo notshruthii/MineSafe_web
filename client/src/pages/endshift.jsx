@@ -18,30 +18,45 @@ const EndShift = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const formData = {
-      endTime,
-      tasksCompleted,
-      toolsReturned,
-      remarks,
-      userId: localStorage.getItem("userId") || "unknownUser",
-      managerId: localStorage.getItem("managerId") || "unknownManager",
-      timestamp: new Date(),
-    };
+  const workerData = JSON.parse(localStorage.getItem("workerData"));
+  const userId = workerData?.employeeId;
+  const managerId = workerData?.managerId || "unknownManager";
 
-    try {
-      await addDoc(collection(db, "endShift"), formData);
-      alert('End of shift form submitted successfully');
-      setEndTime('');
-      setTasksCompleted([]);
-      setToolsReturned('');
-      setRemarks('');
-    } catch (err) {
-      console.error('Error submitting end of shift form:', err);
-      alert('Error submitting end of shift form');
-    }
+  if (!userId) {
+    alert("User not logged in. Please login first.");
+    return;
+  }
+
+  const formData = {
+    endTime,
+    tasksCompleted,
+    toolsReturned,
+    remarks,
+    userId,
+    managerId,
+    timestamp: new Date(),
   };
+
+  try {
+    const endShiftsRef = collection(db, "workers", userId, "endShifts");
+    await addDoc(endShiftsRef, formData);
+    alert('End of shift form submitted successfully');
+
+    // Reset form
+    setEndTime('');
+    setTasksCompleted([]);
+    setToolsReturned('');
+    setRemarks('');
+  } catch (err) {
+    console.error('Error submitting end of shift form:', err);
+    alert('Error submitting end of shift form');
+  }
+};
+
+
+
 
   return (
     <div className="min-h-screen bg-cover bg-center p-8" style={{ backgroundImage: "url('/coal.jpg')" }}>

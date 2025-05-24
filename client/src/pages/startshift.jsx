@@ -2,54 +2,67 @@ import React, { useState, useEffect } from 'react';
 import { db } from "../firebase";
 import { collection, addDoc } from "firebase/firestore";
 
-const StartShift = ({  }) => {
-  const [date, setDate] = useState('');
+const StartShift = () => {
+  const [date, setDate] = useState(() => {
+    const today = new Date();
+    return today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+  });
+
   const [startTime, setStartTime] = useState('');
   const [zone, setZone] = useState('');
-  const [ppe, setPpe] = useState({ helmet: false, gloves: false, goggles: false, jacket: false, shoes: false });
+  const [ppe, setPpe] = useState({
+    helmet: false,
+    gloves: false,
+    goggles: false,
+    jacket: false,
+    shoes: false
+  });
   const [temp, setTemp] = useState('');
   const [pulse, setPulse] = useState('');
   const [fitForDuty, setFitForDuty] = useState(false);
 
-useEffect(() => {
-  setDate(new Date().toISOString().split('T')[0]);
-}, []);
-
-const togglePpe = (item) => {
-  setPpe(prev => ({ ...prev, [item]: !prev[item] }));
-};
- 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  const userData = {
-    date,
-    startTime,
-    zone,
-    ppe,
-    temperature: temp,
-    pulse,
-    fitForDuty,
-    timestamp: new Date() // 
+  const togglePpe = (item) => {
+    setPpe(prev => ({ ...prev, [item]: !prev[item] }));
   };
 
-  try {
-    await addDoc(collection(db, "startShifts"), userData);
-    alert("Shift data submitted successfully!");
-    
-   
-    setStartTime('');
-    setZone('');
-    setPpe({ helmet: false, gloves: false, goggles: false, jacket: false, shoes: false });
-    setTemp('');
-    setPulse('');
-    setFitForDuty(false);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  } catch (error) {
-    console.error("Error adding document: ", error);
-    alert("Failed to submit. Try again.");
-  }
-};
+    const workerData = JSON.parse(localStorage.getItem('workerData'));
+    if (!workerData) {
+      alert("Please login first.");
+      return;
+    }
+
+    const userData = {
+      date,
+      startTime,
+      zone,
+      ppe,
+      temperature: temp,
+      pulse,
+      fitForDuty,
+      timestamp: new Date()
+    };
+
+    try {
+      const shiftsCollectionRef = collection(db, 'workers', workerData.employeeId, 'startShifts');
+      await addDoc(shiftsCollectionRef, userData);
+
+      alert("Shift data submitted successfully!");
+
+      // Reset form
+      setStartTime('');
+      setZone('');
+      setPpe({ helmet: false, gloves: false, goggles: false, jacket: false, shoes: false });
+      setTemp('');
+      setPulse('');
+      setFitForDuty(false);
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      alert("Failed to submit. Try again.");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-cover bg-center p-8" style={{ backgroundImage: "url('/coal.jpg')" }}>
@@ -72,7 +85,8 @@ const handleSubmit = async (e) => {
             <p className="font-semibold">PPE Compliance:</p>
             {['helmet', 'gloves', 'goggles', 'jacket', 'shoes'].map(item => (
               <label className="block" key={item}>
-                <input type="checkbox" checked={ppe[item]} onChange={() => togglePpe(item)} /> {item.charAt(0).toUpperCase() + item.slice(1)}
+                <input type="checkbox" checked={ppe[item]} onChange={() => togglePpe(item)} className="mr-2" />
+                {item.charAt(0).toUpperCase() + item.slice(1)}
               </label>
             ))}
           </div>
@@ -86,7 +100,8 @@ const handleSubmit = async (e) => {
           </label>
 
           <label className="block">
-            <input type="checkbox" checked={fitForDuty} onChange={() => setFitForDuty(!fitForDuty)} className="mr-2" /> Fit for Duty Confirmation
+            <input type="checkbox" checked={fitForDuty} onChange={() => setFitForDuty(!fitForDuty)} className="mr-2" />
+            Fit for Duty Confirmation
           </label>
 
           <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Submit</button>
