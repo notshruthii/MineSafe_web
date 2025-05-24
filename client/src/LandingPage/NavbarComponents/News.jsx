@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 
 export default function CoalMineUpdates() {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const NEWS_API_URL = `https://newsapi.org/v2/everything?q=coal%20mine%20Jharkhand&language=en&apiKey=YOUR_API_KEY`;
+  const NEWS_API_URL = `https://newsapi.org/v2/everything?q=coal%20mine%20AND%20India&language=en&sortBy=publishedAt&apiKey=bb28864660b84e78854d33a2eb1bb617
+`;
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -25,7 +25,7 @@ export default function CoalMineUpdates() {
   }, []);
 
   return (
-    <div className="bg-black text-white min-h-screen p-6">
+    <div className=" text-white min-h-screen p-6" style={{backgroundColor:"#1A1A1A"}}>
       {/* Page Heading */}
       <header className="text-center mb-10">
         <h1 className="text-4xl font-bold mb-2">Coal Mine News Portal</h1>
@@ -46,22 +46,25 @@ export default function CoalMineUpdates() {
         ) : (
           <div className="grid gap-4">
             {news.map((article, index) => (
-              <Card key={index} className="bg-black border border-white hover:border-gray-500">
-                <CardContent className="p-4">
-                  <h3 className="text-lg font-bold mb-1">
-                    <a
-                      href={article.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white hover:underline"
-                    >
-                      {article.title}
-                    </a>
-                  </h3>
-                  <p className="text-sm text-gray-400">{article.description}</p>
-                  <p className="text-xs text-right text-gray-500 mt-2">Source: {article.source.name}</p>
-                </CardContent>
-              </Card>
+              <div
+                key={index}
+                className="bg-black border border-white hover:border-gray-500 p-4 rounded-lg shadow-md transition-all"
+              >
+                <h3 className="text-lg font-bold mb-1">
+                  <a
+                    href={article.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white hover:underline"
+                  >
+                    {article.title}
+                  </a>
+                </h3>
+                <p className="text-sm text-gray-400">{article.description}</p>
+                <p className="text-xs text-right text-gray-500 mt-2">
+                  Source: {article.source.name}
+                </p>
+              </div>
             ))}
           </div>
         )}
