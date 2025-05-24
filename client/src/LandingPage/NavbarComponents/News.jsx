@@ -1,0 +1,71 @@
+import React, { useEffect, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
+
+export default function CoalMineUpdates() {
+  const [news, setNews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const NEWS_API_URL = `https://newsapi.org/v2/everything?q=coal%20mine%20Jharkhand&language=en&apiKey=YOUR_API_KEY`;
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const response = await fetch(NEWS_API_URL);
+        const data = await response.json();
+        setNews(data.articles.slice(0, 5));
+      } catch (error) {
+        console.error("Error fetching news:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNews();
+  }, []);
+
+  return (
+    <div className="bg-black text-white min-h-screen p-6">
+      {/* Page Heading */}
+      <header className="text-center mb-10">
+        <h1 className="text-4xl font-bold mb-2">Coal Mine News Portal</h1>
+        <p className="text-gray-400">Latest mining updates from Jharkhand</p>
+      </header>
+
+      {/* News Section */}
+      <section className="max-w-4xl mx-auto">
+        <h2 className="text-2xl font-semibold mb-4 border-b border-gray-600 pb-2">
+          📰 Recent Updates – Jharkhand
+        </h2>
+
+        {loading ? (
+          <div className="text-center">
+            <Loader2 className="animate-spin inline mr-2 text-white" />
+            Loading latest local news...
+          </div>
+        ) : (
+          <div className="grid gap-4">
+            {news.map((article, index) => (
+              <Card key={index} className="bg-black border border-white hover:border-gray-500">
+                <CardContent className="p-4">
+                  <h3 className="text-lg font-bold mb-1">
+                    <a
+                      href={article.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-white hover:underline"
+                    >
+                      {article.title}
+                    </a>
+                  </h3>
+                  <p className="text-sm text-gray-400">{article.description}</p>
+                  <p className="text-xs text-right text-gray-500 mt-2">Source: {article.source.name}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}
