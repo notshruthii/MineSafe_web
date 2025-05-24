@@ -4,9 +4,8 @@ import { Loader2 } from "lucide-react";
 export default function CoalMineUpdates() {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const NEWS_API_URL = `https://newsapi.org/v2/everything?q=coal%20mine%20AND%20India&language=en&sortBy=publishedAt&apiKey=bb28864660b84e78854d33a2eb1bb617
-`;
+  const api = import.meta.env.VITE_FIREBASE_API_KEY_NEWS;
+  const NEWS_API_URL = `https://newsapi.org/v2/everything?q=coal%20mine%20AND%20India&language=en&sortBy=publishedAt&apiKey=${api}`;
 
   useEffect(() => {
     const fetchNews = async () => {
