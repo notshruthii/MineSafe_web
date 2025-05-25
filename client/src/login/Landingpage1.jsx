@@ -9,9 +9,10 @@ const LandingPage1 = () => {
       className="min-h-screen flex flex-col justify-start items-center"
       style={{ backgroundColor: '#1A1A1A', color: '#fff', paddingTop: "20px" }}
     >
-      <h1 className="text-4xl font-bold mb-3 text-center" style={{ marginTop: "99px" }}>
+      <h1 className="text-4xl font-bold mb-3 text-center" style={{ marginTop: "99px",paddingBottom:"17px" }}>
         Welcome to Coal Mine Dashboard
       </h1>
+      <p style={{ paddingBottom:"17px" }}>Manage your attendance, tasks, safety reports, and shift handovers — all in one place.</p>
 
       <div className="flex space-x-6">
         <button
