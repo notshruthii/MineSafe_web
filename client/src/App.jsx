@@ -15,6 +15,7 @@ import Task from './LandingPage/NavbarComponents/Tasks.jsx'
 import Profile from './LandingPage/NavbarComponents/WorkersProfile.jsx'
 import Report from './LandingPage/NavbarComponents/ReportAbnormality.jsx'
 import Resources from './LandingPage/NavbarComponents/SafetyResources.jsx'
+import Manager from './ManagerPages/ManagerHome.jsx'
 
 
 import "./App.css";
@@ -41,6 +42,7 @@ const App = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/report" element={<Report />} />
         <Route path="/resource" element={<Resources/>}/>
+        <Route path="/manager" element={<Manager />} />
 
       </Routes>
     </div>
