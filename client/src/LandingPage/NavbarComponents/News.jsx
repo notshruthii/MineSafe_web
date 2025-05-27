@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
+// Uncomment if you want to use Card components and have them installed
+// import { Card, CardContent } from "@/components/ui/card";
 
 export default function CoalMineUpdates() {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
-  const api = import.meta.env.VITE_FIREBASE_API_KEY_NEWS;
+
+  // Use environment variable if available, else fallback to your placeholder key
+  const api = import.meta.env.VITE_FIREBASE_API_KEY_NEWS || "YOUR_API_KEY";
   const NEWS_API_URL = `https://newsapi.org/v2/everything?q=coal%20mine%20AND%20India&language=en&sortBy=publishedAt&apiKey=${api}`;
 
   useEffect(() => {
@@ -24,7 +28,7 @@ export default function CoalMineUpdates() {
   }, []);
 
   return (
-    <div className=" text-white min-h-screen p-6" style={{backgroundColor:"#1A1A1A"}}>
+    <div className="text-white min-h-screen p-6" style={{ backgroundColor: "#1A1A1A" }}>
       {/* Page Heading */}
       <header className="text-center mb-10">
         <h1 className="text-4xl font-bold mb-2">Coal Mine News Portal</h1>
@@ -45,6 +49,7 @@ export default function CoalMineUpdates() {
         ) : (
           <div className="grid gap-4">
             {news.map((article, index) => (
+              // You can switch to Card components if you want by uncommenting imports and replacing this div
               <div
                 key={index}
                 className="bg-black border border-white hover:border-gray-500 p-4 rounded-lg shadow-md transition-all"

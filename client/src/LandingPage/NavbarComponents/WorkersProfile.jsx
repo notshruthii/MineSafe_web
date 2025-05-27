@@ -1,5 +1,6 @@
 import React from "react";
 import Profile_pic from './man_coal.webp';
+
 const workerData = {
   empID: "w123",
   email: "w123@minesafe.com",
