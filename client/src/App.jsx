@@ -1,15 +1,22 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+
 import Header from "./WorkerPages/Header.jsx";
 import Navbar1 from "./components/Navbar1";
+import AttendanceApp from "./LandingPage/NavbarComponents/Attendance.jsx";
+import ReportAbnormality from "./LandingPage/NavbarComponents/ReportAbnormality.jsx";
 import LandingPage from "./login/Landingpage1.jsx";
 import WorkerDash from './WorkerPages/Workersdashboard.jsx';
 import SafetyGuidelines from "./LandingPage/Safety_guidelines.jsx";
 import Test from "./LandingPage/FirstPage.jsx";
 import WorkersLogin from "./WorkerPages/WorkersLogin.jsx";
-import ManagersLogin from "./ManagerPages//ManagersLogin.jsx"; // ✅ Corrected path
-import ManagerDashboard from "./ManagerPages/Managerdashboard.jsx"; // ✅ Corrected path
-import AttendanceApp from "./LandingPage/NavbarComponents/Attendance.jsx";
+import ManagersLogin from "./ManagerPages/ManagersLogin.jsx";
+import ManagerDashboard from "./ManagerPages/Managerdashboard.jsx";
+import News from './LandingPage/NavbarComponents/News.jsx';
+import Task from './LandingPage/NavbarComponents/Tasks.jsx';
+import Profile from './LandingPage/NavbarComponents/WorkersProfile.jsx';
+import Report from './LandingPage/NavbarComponents/ReportAbnormality.jsx';
+import Resources from './LandingPage/NavbarComponents/SafetyResources.jsx';
 
 import "./App.css";
 
@@ -20,6 +27,7 @@ const App = () => {
       style={{ backgroundImage: "url('/coal.png')" }}
     >
       <Navbar1 />
+
       <Routes>
         <Route path="/" element={<Test />} />
         <Route path="/dashboard" element={<LandingPage />} />
@@ -30,6 +38,12 @@ const App = () => {
         <Route path="/workers/*" element={<WorkerDash />} />
         <Route path="/manager-dashboard" element={<ManagerDashboard />} />
         <Route path="/Attendance" element={<AttendanceApp />} />
+        <Route path="/news" element={<News />} />
+        <Route path="/task" element={<Task />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/report" element={<Report />} />
+        <Route path="/resource" element={<Resources />} />
+        <Route path="/workers-report" element={<ReportAbnormality />} />
       </Routes>
     </div>
   );

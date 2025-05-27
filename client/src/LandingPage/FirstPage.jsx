@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
-
+import News from './NavbarComponents/News';
 const Test = () => {
   const navigate = useNavigate();
   const [loaded, setLoaded] = useState(false);
@@ -109,8 +109,11 @@ const Test = () => {
           <div style={{ color: "#ff6b6b", fontWeight: "470", paddingBottom: "2px" }}>⚠️ Gas leak detected in Tunnel</div>
           <div style={{ color: "#ff6b6b", fontWeight: "470", paddingBottom: "2px" }}>⚠️ Safety drill scheduled for 3 PM</div>
         </div>
+        
       </main>
+      
     </div>
+   
   );
 };
 

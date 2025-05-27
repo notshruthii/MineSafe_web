@@ -31,10 +31,7 @@ export default function ManagerDashboard() {
       <header className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Welcome back, Manager</h1>
         <div className="flex items-center space-x-4">
-          <div>
-            <p className="text-sm font-medium">Palak jain</p>
-            <p className="text-xs text-green-500">Online</p>
-          </div>
+          
         </div>
       </header>
 

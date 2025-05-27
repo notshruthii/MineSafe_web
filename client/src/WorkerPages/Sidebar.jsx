@@ -27,7 +27,6 @@ const Navbar = () => {
           <FaClock />
           {isOpen && 'Start-Shift'}
         </NavLink>
-
         <NavLink
           to="/workers/safety-tools"
           className={({ isActive }) =>
@@ -67,6 +66,16 @@ const Navbar = () => {
           <FaSignOutAlt />
           {isOpen && 'Logout'}
         </NavLink>
+        <NavLink
+          to="/workers/report"
+          className={({ isActive }) =>
+            `flex items-center gap-3 py-2 px-3 rounded-md text-sm font-medium ${isActive ? 'bg-gray-200' : 'hover:bg-gray-100'}`
+         }
+        >
+          <FaExclamationTriangle />
+          {isOpen && 'Report'}
+        </NavLink>
+
       </nav>
     </div>
   );

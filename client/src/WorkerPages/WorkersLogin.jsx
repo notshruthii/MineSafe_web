@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase'; // adjust path as needed
 
 const WorkersLogin = () => {
   const navigate = useNavigate();
@@ -8,33 +11,47 @@ const WorkersLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
-  const validEmp = '1234';
-  const validPassword = 'qwerty@1234';
-
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (employeeId === validEmp && password === validPassword) {
-      setError('');
-      navigate('/worker-dashboard');
-    } else {
-      setError('Invalid Employee ID or password');
+    // Construct fake email from employeeId
+    const email = `${employeeId}@minesafe.com`;
+
+    try {
+      // Firebase Auth sign-in
+      await signInWithEmailAndPassword(auth, email, password);
+
+      // Fetch worker profile from Firestore
+      const docRef = doc(db, 'workers', employeeId);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const workerData = docSnap.data();
+        // Add employeeId explicitly if not present
+        workerData.employeeId = employeeId;
+
+        // Save worker data to localStorage for session
+        localStorage.setItem('workerData', JSON.stringify(workerData));
+
+        setError('');
+        navigate('/worker-dashboard'); // redirect on success
+      } else {
+        setError('No profile found for this Employee ID.');
+      }
+    } catch (err) {
+      setError('Invalid Employee ID or Password');
+      console.error('Login error:', err);
     }
   };
 
   return (
-    <div
-      className="min-h-screen flex justify-center items-center px-4"
-      style={{ backgroundColor: '#1A1A1A' }}
-    >
+    <div className="min-h-screen flex justify-center items-center px-4" style={{ backgroundColor: '#1A1A1A' }}>
       <div className="w-full max-w-md p-8 bg-[#121212] text-white rounded-2xl shadow-xl border border-gray-700">
         <h2 className="text-3xl font-bold mb-6 text-center">Worker Login</h2>
 
         <form onSubmit={handleLogin}>
           <div className="mb-4">
-            <label className="block mb-1 font-medium" htmlFor="employeeId">
-              Employee ID
-            </label>
+            <label htmlFor="employeeId" className="block mb-1 font-medium">Employee ID</label>
             <input
               type="text"
               id="employeeId"
@@ -47,9 +64,7 @@ const WorkersLogin = () => {
           </div>
 
           <div className="mb-4 relative">
-            <label className="block mb-1 font-medium" htmlFor="password">
-              Password
-            </label>
+            <label htmlFor="password" className="block mb-1 font-medium">Password</label>
             <input
               type={showPassword ? 'text' : 'password'}
               id="password"
@@ -63,22 +78,15 @@ const WorkersLogin = () => {
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-9 text-sm text-gray-400 hover:text-yellow-400"
+              tabIndex={-1}
             >
               {showPassword ? 'Hide' : 'Show'}
             </button>
           </div>
 
           {error && (
-            <div className="text-red-500 mb-4 font-semibold text-center">
-              {error}
-            </div>
+            <div className="text-red-500 mb-4 font-semibold text-center">{error}</div>
           )}
-
-          <div className="mb-6 text-right">
-            <a href="#!" className="text-yellow-400 hover:underline text-sm">
-              Forgot password?
-            </a>
-          </div>
 
           <button
             type="submit"
@@ -91,7 +99,7 @@ const WorkersLogin = () => {
         <p className="mt-6 text-center text-gray-400">
           Don't have an account?{' '}
           <a href="#!" className="text-yellow-400 hover:underline">
-            Sign up
+            Contact Admin
           </a>
         </p>
       </div>

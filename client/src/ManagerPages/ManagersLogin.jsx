@@ -9,7 +9,7 @@ const ManagersLogin = () => {
   const [error, setError] = useState('');
 
   const validManagerId = '012345';
-  const validPassword = 'a@123';
+  const validPassword = 'a123';
 
   const handleLogin = (e) => {
     e.preventDefault();
