@@ -26,7 +26,7 @@ export default function ManagerDashboard() {
   };
 
   return (
-    <div className="min-h-screen p-8 font-sans text-white bg-black">
+    <div className="min-h-screen p-8 font-sans text-white bg-black" style={{}}>
       {/* Header */}
       <header className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Welcome back, Manager</h1>
