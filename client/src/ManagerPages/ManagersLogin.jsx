@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase'; // ✅ Make sure this points to your firebase config
 
 const ManagersLogin = () => {
   const navigate = useNavigate();
@@ -8,33 +11,42 @@ const ManagersLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 
-  const validManagerId = '012345';
-  const validPassword = 'a123';
-
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (managerId === validManagerId && password === validPassword) {
-      setError('');
-      navigate('/manager-dashboard');
-    } else {
-      setError('Invalid Manager ID or password');
+    const email = `${managerId}@minesafe.com`; // 🔁 Match the auth user email
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password); // 🔐 Auth login
+
+      const docRef = doc(db, 'managers', managerId);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const managerData = docSnap.data();
+        managerData.managerId = managerId;
+
+        // Save to localStorage
+        localStorage.setItem('managerData', JSON.stringify(managerData));
+        setError('');
+        navigate('/manager-dashboard');
+      } else {
+        setError('No manager profile found.');
+      }
+    } catch (err) {
+      console.error('Login error:', err.message);
+      setError('Invalid Manager ID or Password');
     }
   };
 
   return (
-    <div
-      className="min-h-screen flex justify-center items-center px-4"
-      style={{ backgroundColor: '#1A1A1A' }}
-    >
+    <div className="min-h-screen flex justify-center items-center px-4" style={{ backgroundColor: '#1A1A1A' }}>
       <div className="w-full max-w-md p-8 bg-[#121212] text-white rounded-2xl shadow-xl border border-gray-700">
         <h2 className="text-3xl font-bold mb-6 text-center">Manager Login</h2>
 
         <form onSubmit={handleLogin}>
           <div className="mb-4">
-            <label className="block mb-1 font-medium" htmlFor="managerId">
-              Manager ID
-            </label>
+            <label htmlFor="managerId" className="block mb-1 font-medium">Manager ID</label>
             <input
               type="text"
               id="managerId"
@@ -47,9 +59,7 @@ const ManagersLogin = () => {
           </div>
 
           <div className="mb-4 relative">
-            <label className="block mb-1 font-medium" htmlFor="password">
-              Password
-            </label>
+            <label htmlFor="password" className="block mb-1 font-medium">Password</label>
             <input
               type={showPassword ? 'text' : 'password'}
               id="password"
@@ -63,22 +73,13 @@ const ManagersLogin = () => {
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-9 text-sm text-gray-400 hover:text-yellow-400"
+              tabIndex={-1}
             >
               {showPassword ? 'Hide' : 'Show'}
             </button>
           </div>
 
-          {error && (
-            <div className="text-red-500 mb-4 font-semibold text-center">
-              {error}
-            </div>
-          )}
-
-          <div className="mb-6 text-right">
-            <a href="#!" className="text-yellow-400 hover:underline text-sm">
-              Forgot password?
-            </a>
-          </div>
+          {error && <div className="text-red-500 mb-4 font-semibold text-center">{error}</div>}
 
           <button
             type="submit"
@@ -91,7 +92,7 @@ const ManagersLogin = () => {
         <p className="mt-6 text-center text-gray-400">
           Don’t have an account?{' '}
           <a href="#!" className="text-yellow-400 hover:underline">
-            Sign up
+            Contact Admin
           </a>
         </p>
       </div>
