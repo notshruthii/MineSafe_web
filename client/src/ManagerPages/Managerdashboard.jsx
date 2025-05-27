@@ -1,157 +1,249 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { db } from "../firebase";
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  orderBy,
+  limit,
+} from "firebase/firestore";
 
-const getRandom = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const ManagerDashboard = () => {
+  const [workers, setWorkers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-const sampleWorkers = [
-  { id: 1, name: 'Amit Singh', role: 'Driller' },
-  { id: 2, name: 'Ravi Kumar', role: 'Supervisor' },
-  { id: 3, name: 'Sanjay Verma', role: 'Loader' },
-  { id: 4, name: 'Deepak Rawat', role: 'Blaster' },
-];
-
-const generateShiftReport = (name) => ({
-  hoursWorked: getRandom(6, 12),
-  tasksCompleted: getRandom(2, 8),
-  incidents: getRandom(0, 2),
-  notes: `Performance of ${name} was ${["excellent", "satisfactory", "needs improvement"][getRandom(0, 2)]}.`,
-});
-
-export default function ManagerDashboard() {
   const [selectedWorker, setSelectedWorker] = useState(null);
-  const [shiftReport, setShiftReport] = useState(null);
+  const [formReports, setFormReports] = useState({
+    startShift: null,
+    safetyTools: null,
+    taskLogging: null,
+    endShift: null,
+  });
+  const [reportLoading, setReportLoading] = useState(false);
 
-  const handleViewReport = (worker) => {
+  useEffect(() => {
+    const fetchWorkers = async () => {
+      try {
+        const managerData = JSON.parse(localStorage.getItem("managerData"));
+        const managerId = managerData?.managerId;
+
+        if (!managerId) {
+          alert("No manager data found. Please log in again.");
+          setLoading(false);
+          return;
+        }
+
+        const workersRef = collection(db, "workers");
+        const q = query(workersRef, where("mgrID", "==", managerId));
+        const querySnapshot = await getDocs(q);
+
+        const workersList = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        setWorkers(workersList);
+      } catch (error) {
+        console.error("Error fetching workers:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWorkers();
+  }, []);
+
+  const fetchAllFormReports = async (worker) => {
+    setReportLoading(true);
     setSelectedWorker(worker);
-    setShiftReport(generateShiftReport(worker.name));
+
+    try {
+      const fetchLatestDoc = async (subcollectionName) => {
+        const ref = collection(db, "workers", worker.id, subcollectionName);
+        const q = query(ref, orderBy("timestamp", "desc"), limit(1));
+        const snapshot = await getDocs(q);
+        return snapshot.empty ? null : snapshot.docs[0].data();
+      };
+
+      const [startShift, safetyTools, taskLogging, endShift] = await Promise.all([
+        fetchLatestDoc("startShifts"),
+        fetchLatestDoc("safetyTools"),
+        fetchLatestDoc("taskLogging"),
+        fetchLatestDoc("endShifts"),
+      ]);
+
+      setFormReports({ startShift, safetyTools, taskLogging, endShift });
+    } catch (error) {
+      console.error("Error fetching form reports:", error);
+    }
+
+    setReportLoading(false);
   };
 
+  if (loading) return <div className="p-8">Loading workers...</div>;
+
   return (
-    <div className="min-h-screen p-8 font-sans text-white bg-black">
-      {/* Header */}
-      <header className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Welcome back, Manager</h1>
-        <div className="flex items-center space-x-4">
-          
-        </div>
-      </header>
-
-      {/* Stats */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <Card title="Total Workers" value={getRandom(100, 150)} />
-        <Card title="Shifts Today" value={getRandom(10, 20)} />
-        <Card title="Active Tasks" value={getRandom(20, 40)} />
-      </section>
-
-      {/* Progress and Tracker */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-gray-800 rounded-2xl p-6 shadow">
-          <h2 className="text-lg font-semibold mb-4">Daily Shift Progress</h2>
-          <div className="flex items-center justify-between">
-            <div className="text-center">
-              <p className="text-2xl font-bold">{getRandom(6, 8)}h</p>
-              <p className="text-xs text-gray-400">Avg. Shift Duration</p>
-            </div>
-            <div className="w-24 h-24 rounded-full border-8 border-green-400 flex items-center justify-center text-xl font-bold">
-              {getRandom(60, 90)}%
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-gray-800 rounded-2xl p-6 shadow col-span-2">
-          <h2 className="text-lg font-semibold mb-4">Shift Schedule</h2>
-          <div className="grid grid-cols-5 gap-4">
-            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map((day, index) => (
-              <div key={index} className="bg-gray-700 rounded-xl p-4 text-center">
-                <p className="font-semibold">{day}</p>
-                <p className="mt-2 text-green-400">{getRandom(6, 10)} Workers</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Onboarding Task */}
-      <section className="bg-gray-800 rounded-2xl p-6 shadow mb-8">
-        <h2 className="text-lg font-semibold mb-4">Onboarding Progress</h2>
-        <div className="flex items-center justify-between mb-4">
-          <p className="text-2xl font-bold">4/6 Tasks Completed</p>
-          <p className="text-sm text-green-400">66%</p>
-        </div>
-        <ul className="space-y-2">
-          {[
-            'ID Verification',
-            'Safety Training',
-            'Tool Orientation',
-            'Team Introduction',
-            'Coal Site Tour',
-            'Emergency Protocols',
-          ].map((task, index) => (
-            <li
-              key={index}
-              className={`flex justify-between p-3 rounded-xl ${
-                index < 4 ? 'bg-green-700' : 'bg-gray-700'
-              }`}
-            >
-              <span>{task}</span>
-              {index < 4 ? (
-                <span className="text-green-300 font-bold">✔</span>
-              ) : (
-                <span className="text-gray-400">○</span>
-              )}
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* Worker Reports */}
-      <section className="bg-gray-800 rounded-2xl p-6 shadow mb-10">
-        <h2 className="text-lg font-semibold mb-4">Individual Worker Reports</h2>
-        <ul className="divide-y divide-gray-700">
-          {sampleWorkers.map((worker) => (
-            <li key={worker.id} className="flex justify-between items-center py-3">
-              <div>
-                <p className="font-semibold">{worker.name}</p>
-                <p className="text-sm text-gray-400">{worker.role}</p>
-              </div>
+    <div className="min-h-screen bg-gray-100 p-8">
+      <h1 className="text-3xl font-bold mb-6">Manager Dashboard</h1>
+      {workers.length === 0 ? (
+        <p>No workers assigned to you.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {workers.map((worker) => (
+            <div key={worker.id} className="bg-white p-4 rounded shadow">
+              <h2 className="text-xl font-semibold">{worker.name || "Unnamed"}</h2>
+              <p>ID: {worker.id}</p>
+              <p>Name: {worker.fullName || "Not specified"}</p>
+              <p>Manager ID: {worker.mgrID}</p>
               <button
-                onClick={() => handleViewReport(worker)}
-                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                className="mt-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                onClick={() => fetchAllFormReports(worker)}
               >
-                View End Shift Report
+                View Reports
               </button>
-            </li>
+            </div>
           ))}
-        </ul>
-      </section>
+        </div>
+      )}
 
-      {/* Shift Report Section */}
-      {selectedWorker && shiftReport && (
-        <section className="bg-gray-800 rounded-2xl p-6 shadow-lg mb-10">
-          <h3 className="text-xl font-bold mb-2">End Shift Report</h3>
-          <p className="mb-1"><strong>Worker:</strong> {selectedWorker.name}</p>
-          <p className="mb-1"><strong>Role:</strong> {selectedWorker.role}</p>
-          <p className="mb-1"><strong>Hours Worked:</strong> {shiftReport.hoursWorked}</p>
-          <p className="mb-1"><strong>Tasks Completed:</strong> {shiftReport.tasksCompleted}</p>
-          <p className="mb-1"><strong>Incidents:</strong> {shiftReport.incidents}</p>
-          <p className="mb-3"><strong>Notes:</strong> {shiftReport.notes}</p>
-          <button
-            className="mt-2 w-full bg-red-600 text-white py-2 rounded hover:bg-red-700"
-            onClick={() => setSelectedWorker(null)}
-          >
-            Close Report
-          </button>
-        </section>
+      {selectedWorker && (
+        <div className="mt-8 bg-white p-6 rounded shadow-lg max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold mb-4">
+            Reports for {selectedWorker.name}
+          </h2>
+
+          {reportLoading ? (
+            <p>Loading reports...</p>
+          ) : (
+            <>
+              {/* Start Shift Report */}
+              
+
+              <>
+  {/* Start Shift Report */}
+  <div className="mb-6">
+    <h3 className="text-xl font-semibold mb-2">Start Shift</h3>
+    {formReports.startShift ? (
+      <ul className="list-disc list-inside space-y-1">
+        <li><strong>Date:</strong> {formReports.startShift.date}</li>
+        <li><strong>Fit for Duty:</strong> {formReports.startShift.fitForDuty ? "Yes" : "No"}</li>
+        <li><strong>Pulse:</strong> {formReports.startShift.pulse}</li>
+        <li><strong>Temperature:</strong> {formReports.startShift.temperature} °C</li>
+        <li><strong>Start Time:</strong> {formReports.startShift.startTime}</li>
+        <li><strong>PPE:</strong>
+          <ul className="ml-4 list-disc">
+            {formReports.startShift.ppe &&
+              Object.entries(formReports.startShift.ppe).map(([item, value]) => (
+                <li key={item}>
+                  {item.charAt(0).toUpperCase() + item.slice(1)}:{" "}
+                  <span className={value ? "text-green-600" : "text-red-600"}>
+                    {value ? "Yes" : "No"}
+                  </span>
+                </li>
+              ))}
+          </ul>
+        </li>
+      </ul>
+    ) : (
+      <p>No start shift data available.</p>
+    )}
+  </div>
+
+  {/* Safety Tools Report */}
+  <div className="mb-6">
+    <h3 className="text-xl font-semibold mb-2">Safety Tools</h3>
+    {formReports.safetyTools ? (
+      <ul className="list-disc list-inside space-y-1">
+        <li><strong>User ID:</strong> {formReports.safetyTools.userId}</li>
+        <li><strong>Timestamp:</strong> {formReports.safetyTools.timestamp?.seconds ? new Date(formReports.safetyTools.timestamp.seconds * 1000).toLocaleString() : "N/A"}</li>
+        <li><strong>PPE:</strong>
+          <ul className="ml-4 list-disc">
+            {Object.entries(formReports.safetyTools)
+              .filter(([key]) => ["gloves", "helmet", "boots", "vest", "glasses"].includes(key))
+              .map(([key, value]) => (
+                <li key={key}>
+                  {key.charAt(0).toUpperCase() + key.slice(1)}:{" "}
+                  <span className={value ? "text-green-600" : "text-red-600"}>
+                    {value ? "Yes" : "No"}
+                  </span>
+                </li>
+              ))}
+          </ul>
+        </li>
+      </ul>
+    ) : (
+      <p>No safety tools data available.</p>
+    )}
+  </div>
+
+  {/* Task Logs Report */}
+  <div className="mb-6">
+    <h3 className="text-xl font-semibold mb-2">Task Logging</h3>
+    {formReports.taskLogging ? (
+      <ul className="list-disc list-inside space-y-1">
+        <li><strong>Tasks Assigned:</strong>
+          <ul className="ml-4 list-disc">
+            {formReports.taskLogging.tasksAssigned?.map((task, i) => (
+              <li key={i}>{task}</li>
+            ))}
+          </ul>
+        </li>
+        <li><strong>Tools Issued:</strong> {formReports.taskLogging.toolsIssued}</li>
+        <li><strong>Task Remarks:</strong> {formReports.taskLogging.taskRemarks}</li>
+        <li><strong>Timestamp:</strong> {formReports.taskLogging.timestamp?.seconds ? new Date(formReports.taskLogging.timestamp.seconds * 1000).toLocaleString() : "N/A"}</li>
+      </ul>
+    ) : (
+      <p>No task logs data available.</p>
+    )}
+  </div>
+
+  {/* End Shift Report */}
+  <div className="mb-6">
+    <h3 className="text-xl font-semibold mb-2">End Shift</h3>
+    {formReports.endShift ? (
+      <ul className="list-disc list-inside space-y-1">
+        <li><strong>End Time:</strong> {formReports.endShift.endTime}</li>
+        <li><strong>Tools Returned:</strong> {formReports.endShift.toolsReturned}</li>
+        <li><strong>Remarks:</strong> {formReports.endShift.remarks || "None"}</li>
+        <li><strong>Tasks Completed:</strong>
+          <ul className="ml-4 list-disc">
+            {formReports.endShift.tasksCompleted?.map((task, i) => (
+              <li key={i}>{task}</li>
+            ))}
+          </ul>
+        </li>
+        <li><strong>Timestamp:</strong> {formReports.endShift.timestamp?.seconds ? new Date(formReports.endShift.timestamp.seconds * 1000).toLocaleString() : "N/A"}</li>
+      </ul>
+    ) : (
+      <p>No end shift data available.</p>
+    )}
+  </div>
+
+  
+</>
+
+
+              <button
+                className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                onClick={() => {
+                  setSelectedWorker(null);
+                  setFormReports({
+                    startShift: null,
+                    safetyTools: null,
+                    taskLogging: null,
+                    endShift: null,
+                  });
+                }}
+              >
+                Close Reports
+              </button>
+            </>
+          )}
+        </div>
       )}
     </div>
   );
-}
+};
 
-// Reusable card component
-const Card = ({ title, value }) => (
-  <div className="bg-gray-800 text-white rounded-2xl p-6 shadow text-center">
-    <h3 className="text-lg font-semibold">{title}</h3>
-    <p className="text-3xl font-bold mt-2">{value}</p>
-  </div>
-);
-
-
+export default ManagerDashboard;

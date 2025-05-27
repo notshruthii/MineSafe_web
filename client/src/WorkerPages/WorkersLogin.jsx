@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase'; // adjust path as needed
+import { auth, db } from '../firebase'; 
 
 const WorkersLogin = () => {
   const navigate = useNavigate();

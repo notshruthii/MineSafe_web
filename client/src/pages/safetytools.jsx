@@ -22,7 +22,7 @@ const handleSubmit = async (e) => {
 
   const workerData = JSON.parse(localStorage.getItem("workerData"));
   const userId = workerData?.employeeId;
-  const managerId = workerData?.managerId || "unknownManager";
+  // const managerId = workerData?.managerId || "unknownManager";
 
   if (!userId) {
     alert("Please login first.");
