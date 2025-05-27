@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 
 import Header from "./WorkerPages/Header.jsx";
 import Navbar1 from "./components/Navbar1";
+import AboutUs from "./LandingPage/NavbarComponents/AboutUs.jsx";
 import AttendanceApp from "./LandingPage/NavbarComponents/Attendance.jsx";
 import ReportAbnormality from "./LandingPage/NavbarComponents/ReportAbnormality.jsx";
 import LandingPage from "./login/Landingpage1.jsx";
@@ -45,6 +46,7 @@ const App = () => {
         <Route path="/" element={<Test />} />
         <Route path="/dashboard" element={<LandingPage />} />
         <Route path="/safety-guidelines" element={<SafetyGuidelines />} />
+        <Route path="/about-us" element={<AboutUs />} />
         <Route path="/workers-login" element={<WorkersLogin />} />
         <Route path="/manager-login" element={<ManagersLogin />} />
         <Route path="/worker-dashboard" element={<Header />} />
