@@ -4,20 +4,14 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./Header";
 import WorkersLogin from "./WorkersLogin";
 import WorkerLayout from "./WorkerLayout";
-import ReportAbnormality from "./ReportAbnormality";
-import AttendanceApp from "./Attendance";
-import StartShift from "./pages/StartShift";
-import TaskLogging from "./pages/TaskLogging";
-import EndShift from "./pages/EndShift";
-import SafetyTools from "./pages/SafetyTools";
-import Logout from "./pages/Logout";
-import WorkerLayout from "./Workerlayout";
-
+import ReportAbnormality from "../LandingPage/NavbarComponents/ReportAbnormality.jsx";
+import AttendanceApp from "../LandingPage/NavbarComponents/Attendance";
 import StartShift from "../pages/StartShift";
 import TaskLogging from "../pages/TaskLogging";
 import EndShift from "../pages/EndShift";
 import SafetyTools from "../pages/SafetyTools";
 import Logout from "../pages/Logout";
+
 const WorkerDash = () => {
   return (
     <Routes>
