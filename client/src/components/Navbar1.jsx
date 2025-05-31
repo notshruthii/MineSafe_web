@@ -26,12 +26,9 @@ const Navbar = () => {
         <ul className="navbar-nav ms-auto">
           <Taskbar_names label="Home" to="/" />
          <Taskbar_names label="Profile" to="/profile" />
-          
-        
-          
           <Taskbar_names label="Report" to="/report" />
-          <Taskbar_names label="Careers" to="/task" />
-           <Taskbar_names label="About Us" to="/news" />
+          <Taskbar_names label="Careers" to="/career" />
+           <Taskbar_names label="About Us" to="/about" />
              <Taskbar_names label="Contact Us" to="/resource" />
           <Taskbar_names label="Logout" to="/logout" className="text-danger" />
         </ul>

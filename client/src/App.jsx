@@ -13,11 +13,12 @@ import Task from './LandingPage/NavbarComponents/Tasks.jsx';
 import Profile from './LandingPage/NavbarComponents/WorkersProfile.jsx';
 import Report from './LandingPage/NavbarComponents/ReportAbnormality.jsx';
 import Resources from './LandingPage/NavbarComponents/SafetyResources.jsx';
-
+import About from './LandingPage/NavbarComponents/AboutUs.jsx';
 // Worker Pages
 import WorkersLogin from "./WorkerPages/WorkersLogin.jsx";
 import WorkerDash from "./WorkerPages/Workersdashboard.jsx";
-
+import Careers from './LandingPage/NavbarComponents/CareerSpot.jsx';
+import Logout from './LandingPage/NavbarComponents/Logout.jsx';
 // Manager Pages
 import ManagersLogin from "./ManagerPages/ManagersLogin.jsx";
 import ManagerDashboard from "./ManagerPages/Managerdashboard.jsx";
@@ -51,6 +52,9 @@ const App = () => {
         <Route path="/resource" element={<Resources />} />
         <Route path="/manager" element={<Manager />} />
         <Route path="/worker-dashboard/*" element={<WorkerDash />} />
+        <Route path="/about" element={<About/>} />
+        <Route path="/career" element={<Careers/>} />
+         <Route path="/logout" element={<Logout/>} />
 
        
       </Routes>
