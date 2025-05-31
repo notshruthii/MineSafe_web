@@ -87,7 +87,7 @@ const Test = () => {
     const fetchNews = async () => {
       try {
         const response = await fetch(
-          "https://newsapi.org/v2/top-headlines?country=in&q=coal%20mining&language=en&pageSize=10&apiKey=0aa4e9f089cb44e8afa708efff9a4f49"
+          "https://newsapi.org/v2/everything?q=coal+mining&language=en&sortBy=publishedAt&pageSize=10&apiKey=0aa4e9f089cb44e8afa708efff9a4f49"
         );
         const data = await response.json();
         if (data.status === "ok") {
