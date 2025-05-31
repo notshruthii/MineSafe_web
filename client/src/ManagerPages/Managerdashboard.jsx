@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../firebase";
+import SidebarWithSearch from "../components/SidebarWithSearch";
 import {
   collection,
   getDocs,
@@ -20,9 +21,20 @@ const ManagerDashboard = () => {
     endShift: null,
   });
   const [reportLoading, setReportLoading] = useState(false);
+  const [abnormalities, setAbnormalities] = useState([]);
+  const [selectedAbnormalityTab, setSelectedAbnormalityTab] = useState(null);
+  const [submittedToday, setSubmittedToday] = useState(0);
+  const [missingSubmissions, setMissingSubmissions] = useState(0);
+  const [activeTab, setActiveTab] = useState("abnormalities");
 
   useEffect(() => {
-    const fetchWorkers = async () => {
+    if (abnormalities.length > 0) {
+      setSelectedAbnormalityTab(abnormalities[0].id);
+    }
+  }, [abnormalities]);
+
+  useEffect(() => {
+    const fetchWorkersAndAbnormalities = async () => {
       try {
         const managerData = JSON.parse(localStorage.getItem("managerData"));
         const managerId = managerData?.managerId;
@@ -36,21 +48,36 @@ const ManagerDashboard = () => {
         const workersRef = collection(db, "workers");
         const q = query(workersRef, where("mgrID", "==", managerId));
         const querySnapshot = await getDocs(q);
-
         const workersList = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
-
         setWorkers(workersList);
+
+        const allAbnormalities = [];
+        for (const worker of workersList) {
+          const abRef = collection(db, "workers", worker.id, "reports");
+          const abSnap = await getDocs(query(abRef, orderBy("timestamp", "desc")));
+          abSnap.forEach((doc) => {
+            allAbnormalities.push({
+              id: doc.id,
+              workerName: worker.fullName || "Unnamed",
+              workerId: worker.id,
+              ...doc.data(),
+            });
+          });
+        }
+
+        allAbnormalities.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds);
+        setAbnormalities(allAbnormalities);
       } catch (error) {
-        console.error("Error fetching workers:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchWorkers();
+    fetchWorkersAndAbnormalities();
   }, []);
 
   const fetchAllFormReports = async (worker) => {
@@ -80,21 +107,66 @@ const ManagerDashboard = () => {
     setReportLoading(false);
   };
 
-  if (loading) return <div className="p-8 text-white">Loading workers...</div>;
+  const fetchReportsForAllWorkers = async () => {
+    const today = new Date().toLocaleDateString();
+    let submitted = 0;
+
+    for (const worker of workers) {
+      const ref = collection(db, "workers", worker.id, "startShifts");
+      const snapshot = await getDocs(query(ref, orderBy("timestamp", "desc"), limit(1)));
+      if (!snapshot.empty) {
+        const doc = snapshot.docs[0].data();
+        const reportDate = new Date(doc.date).toLocaleDateString();
+        if (reportDate === today) submitted++;
+      }
+    }
+
+    setSubmittedToday(submitted);
+    setMissingSubmissions(workers.length - submitted);
+  };
+
+  useEffect(() => {
+    if (workers.length > 0) {
+      fetchReportsForAllWorkers();
+    }
+  }, [workers]);
+
+  if (loading) return <div className="p-8 text-white">Loading...</div>;
 
   return (
-    <div className="background p-8 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6 text-white">Manager Dashboard</h1>
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Sidebar */}
+      <SidebarWithSearch
+        workers={workers}
+        onSelectWorker={fetchAllFormReports}
+        selectedWorkerId={selectedWorker?.id}
+        onNavigate={setActiveTab}
+      />
 
-      {workers.length === 0 ? (
-        <p className="text-white">No workers assigned to you.</p>
-      ) : (
+      {/* Main Content */}
+      <div className="flex-1 p-6">
+        <h1 className="text-3xl font-bold mb-6">Manager Dashboard</h1>
+
+        {/* Stats */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div className="bg-white p-4 rounded shadow-md text-center">
+            <h3 className="text-lg font-semibold text-gray-700">Total Workers</h3>
+            <p className="text-2xl font-bold text-blue-600">{workers.length}</p>
+          </div>
+          <div className="bg-white p-4 rounded shadow-md text-center">
+            <h3 className="text-lg font-semibold text-gray-700">Submitted Today</h3>
+            <p className="text-2xl font-bold text-green-600">{submittedToday}</p>
+          </div>
+          <div className="bg-white p-4 rounded shadow-md text-center">
+            <h3 className="text-lg font-semibold text-gray-700">Missing Submissions</h3>
+            <p className="text-2xl font-bold text-red-600">{missingSubmissions}</p>
+          </div>
+        </div>
+
+        {/* Worker Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {workers.map((worker) => (
-            <div
-              key={worker.id}
-              className="bg-white/10 backdrop-blur-sm p-4 rounded-xl shadow text-white"
-            >
+            <div key={worker.id} className="bg-white p-4 rounded-xl shadow text-gray-800">
               <h2 className="text-xl font-semibold">{worker.name || "Unnamed"}</h2>
               <p>ID: {worker.id}</p>
               <p>Name: {worker.fullName || "Not specified"}</p>
@@ -108,137 +180,113 @@ const ManagerDashboard = () => {
             </div>
           ))}
         </div>
-      )}
 
-      {selectedWorker && (
-        <div className="mt-8 bg-white/10 backdrop-blur-sm p-6 rounded-xl shadow-lg max-w-3xl mx-auto text-white">
-          <h2 className="text-2xl font-bold mb-4">
-            Reports for {selectedWorker.name}
-          </h2>
+        {/* Reports Section */}
+        {selectedWorker && (
+          <div className="mt-8 bg-white p-6 rounded-xl shadow-lg max-w-4xl mx-auto text-gray-800">
+            <h2 className="text-2xl font-bold mb-4">
+              Reports for {selectedWorker.name}
+            </h2>
 
-          {reportLoading ? (
-            <p>Loading reports...</p>
-          ) : (
-            <>
-              {/* Start Shift Report */}
-              <div className="mb-6">
-                <h3 className="text-xl font-semibold mb-2">Start Shift</h3>
-                {formReports.startShift ? (
-                  <ul className="list-disc list-inside space-y-1">
-                    <li><strong>Date:</strong> {formReports.startShift.date}</li>
-                    <li><strong>Fit for Duty:</strong> {formReports.startShift.fitForDuty ? "Yes" : "No"}</li>
-                    <li><strong>Pulse:</strong> {formReports.startShift.pulse}</li>
-                    <li><strong>Temperature:</strong> {formReports.startShift.temperature} °C</li>
-                    <li><strong>Start Time:</strong> {formReports.startShift.startTime}</li>
-                    <li><strong>PPE:</strong>
-                      <ul className="ml-4 list-disc">
-                        {formReports.startShift.ppe &&
-                          Object.entries(formReports.startShift.ppe).map(([item, value]) => (
+            {reportLoading ? (
+              <p>Loading reports...</p>
+            ) : (
+              <>
+                {/* Start Shift */}
+                <div className="mb-6">
+                  <h3 className="text-xl font-semibold mb-2">Start Shift</h3>
+                  {formReports.startShift ? (
+                    <ul className="list-disc list-inside">
+                      <li>Date: {formReports.startShift.date}</li>
+                      <li>Fit for Duty: {formReports.startShift.fitForDuty ? "Yes" : "No"}</li>
+                      <li>Pulse: {formReports.startShift.pulse}</li>
+                      <li>Temperature: {formReports.startShift.temperature} °C</li>
+                      <li>Start Time: {formReports.startShift.startTime}</li>
+                      <li>PPE:
+                        <ul className="ml-4 list-disc">
+                          {Object.entries(formReports.startShift.ppe || {}).map(([item, value]) => (
                             <li key={item}>
-                              {item.charAt(0).toUpperCase() + item.slice(1)}:{" "}
-                              <span className={value ? "text-green-400" : "text-red-400"}>
-                                {value ? "Yes" : "No"}
-                              </span>
+                              {item}: {value ? "✔" : "❌"}
                             </li>
                           ))}
-                      </ul>
-                    </li>
-                  </ul>
-                ) : (
-                  <p>No start shift data available.</p>
-                )}
-              </div>
+                        </ul>
+                      </li>
+                    </ul>
+                  ) : (
+                    <p>No start shift data available.</p>
+                  )}
+                </div>
 
-              {/* Safety Tools Report */}
-              <div className="mb-6">
-                <h3 className="text-xl font-semibold mb-2">Safety Tools</h3>
-                {formReports.safetyTools ? (
-                  <ul className="list-disc list-inside space-y-1">
-                    <li><strong>User ID:</strong> {formReports.safetyTools.userId}</li>
-                    <li><strong>Timestamp:</strong> {formReports.safetyTools.timestamp?.seconds ? new Date(formReports.safetyTools.timestamp.seconds * 1000).toLocaleString() : "N/A"}</li>
-                    <li><strong>PPE:</strong>
-                      <ul className="ml-4 list-disc">
-                        {Object.entries(formReports.safetyTools)
-                          .filter(([key]) => ["gloves", "helmet", "boots", "vest", "glasses"].includes(key))
-                          .map(([key, value]) => (
+                {/* Safety Tools */}
+                <div className="mb-6">
+                  <h3 className="text-xl font-semibold mb-2">Safety Tools</h3>
+                  {formReports.safetyTools ? (
+                    <ul className="list-disc list-inside">
+                      <li>User ID: {formReports.safetyTools.userId}</li>
+                      <li>Timestamp: {formReports.safetyTools.timestamp?.seconds ? new Date(formReports.safetyTools.timestamp.seconds * 1000).toLocaleString() : "N/A"}</li>
+                      <li>PPE:
+                        <ul className="ml-4 list-disc">
+                          {["gloves", "helmet", "boots", "vest", "glasses"].map((key) => (
                             <li key={key}>
-                              {key.charAt(0).toUpperCase() + key.slice(1)}:{" "}
-                              <span className={value ? "text-green-400" : "text-red-400"}>
-                                {value ? "Yes" : "No"}
-                              </span>
+                              {key}: {formReports.safetyTools[key] ? "✔" : "❌"}
                             </li>
                           ))}
-                      </ul>
-                    </li>
-                  </ul>
-                ) : (
-                  <p>No safety tools data available.</p>
-                )}
-              </div>
+                        </ul>
+                      </li>
+                    </ul>
+                  ) : (
+                    <p>No safety tools data available.</p>
+                  )}
+                </div>
 
-              {/* Task Logs Report */}
-              <div className="mb-6">
-                <h3 className="text-xl font-semibold mb-2">Task Logging</h3>
-                {formReports.taskLogging ? (
-                  <ul className="list-disc list-inside space-y-1">
-                    <li><strong>Tasks Assigned:</strong>
-                      <ul className="ml-4 list-disc">
-                        {formReports.taskLogging.tasksAssigned?.map((task, i) => (
-                          <li key={i}>{task}</li>
-                        ))}
-                      </ul>
-                    </li>
-                    <li><strong>Tools Issued:</strong> {formReports.taskLogging.toolsIssued}</li>
-                    <li><strong>Task Remarks:</strong> {formReports.taskLogging.taskRemarks}</li>
-                    <li><strong>Timestamp:</strong> {formReports.taskLogging.timestamp?.seconds ? new Date(formReports.taskLogging.timestamp.seconds * 1000).toLocaleString() : "N/A"}</li>
-                  </ul>
-                ) : (
-                  <p>No task logs data available.</p>
-                )}
-              </div>
+                {/* Task Logging */}
+                <div className="mb-6">
+                  <h3 className="text-xl font-semibold mb-2">Task Logging</h3>
+                  {formReports.taskLogging ? (
+                    <ul className="list-disc list-inside">
+                      <li>Tools Issued: {formReports.taskLogging.toolsIssued}</li>
+                      <li>Task Remarks: {formReports.taskLogging.taskRemarks}</li>
+                      <li>Tasks Assigned:
+                        <ul className="ml-4 list-disc">
+                          {formReports.taskLogging.tasksAssigned?.map((task, i) => (
+                            <li key={i}>{task}</li>
+                          ))}
+                        </ul>
+                      </li>
+                    </ul>
+                  ) : (
+                    <p>No task logs data available.</p>
+                  )}
+                </div>
 
-              {/* End Shift Report */}
-              <div className="mb-6">
-                <h3 className="text-xl font-semibold mb-2">End Shift</h3>
-                {formReports.endShift ? (
-                  <ul className="list-disc list-inside space-y-1">
-                    <li><strong>End Time:</strong> {formReports.endShift.endTime}</li>
-                    <li><strong>Tools Returned:</strong> {formReports.endShift.toolsReturned}</li>
-                    <li><strong>Remarks:</strong> {formReports.endShift.remarks || "None"}</li>
-                    <li><strong>Tasks Completed:</strong>
-                      <ul className="ml-4 list-disc">
-                        {formReports.endShift.tasksCompleted?.map((task, i) => (
-                          <li key={i}>{task}</li>
-                        ))}
-                      </ul>
-                    </li>
-                    <li><strong>Timestamp:</strong> {formReports.endShift.timestamp?.seconds ? new Date(formReports.endShift.timestamp.seconds * 1000).toLocaleString() : "N/A"}</li>
-                  </ul>
-                ) : (
-                  <p>No end shift data available.</p>
-                )}
-              </div>
-
-              <button
-                className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-                onClick={() => {
-                  setSelectedWorker(null);
-                  setFormReports({
-                    startShift: null,
-                    safetyTools: null,
-                    taskLogging: null,
-                    endShift: null,
-                  });
-                }}
-              >
-                Close Reports
-              </button>
-            </>
-          )}
-        </div>
-      )}
+                {/* End Shift */}
+                <div className="mb-6">
+                  <h3 className="text-xl font-semibold mb-2">End Shift</h3>
+                  {formReports.endShift ? (
+                    <ul className="list-disc list-inside">
+                      <li>End Time: {formReports.endShift.endTime}</li>
+                      <li>Tools Returned: {formReports.endShift.toolsReturned}</li>
+                      <li>Remarks: {formReports.endShift.remarks}</li>
+                      <li>Tasks Completed:
+                        <ul className="ml-4 list-disc">
+                          {formReports.endShift.tasksCompleted?.map((task, i) => (
+                            <li key={i}>{task}</li>
+                          ))}
+                        </ul>
+                      </li>
+                    </ul>
+                  ) : (
+                    <p>No end shift data available.</p>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
 
 export default ManagerDashboard;
+
