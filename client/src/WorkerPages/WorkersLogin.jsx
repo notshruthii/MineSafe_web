@@ -45,8 +45,16 @@ const WorkersLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center px-4" style={{ backgroundColor: '#1A1A1A' }}>
-      <div className="w-full max-w-md p-8 bg-[#121212] text-white rounded-2xl shadow-xl border border-gray-700">
+    
+    <div
+    className="min-h-screen flex justify-center items-center px-4"
+    style={{
+      background: `linear-gradient(to top right, rgba(68, 17, 236, 0.7), transparent 40%), 
+                   linear-gradient(to top left, rgba(68, 17, 236, 0.7), transparent 40%), 
+                   rgb(1, 8, 27)`,
+    }}
+  >
+      <div className="w-full max-w-md p-8 bg-white/10 backdrop-blur-md text-white rounded-2xl shadow-2xl border border-gray-600">
         <h2 className="text-3xl font-bold mb-6 text-center">Worker Login</h2>
 
         <form onSubmit={handleLogin}>
@@ -58,7 +66,7 @@ const WorkersLogin = () => {
               required
               value={employeeId}
               onChange={(e) => setEmployeeId(e.target.value)}
-              className="w-full px-4 py-2 bg-black border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full px-4 py-2 bg-black/50 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 text-white placeholder-gray-400"
               placeholder="Enter your Employee ID"
             />
           </div>
@@ -71,7 +79,7 @@ const WorkersLogin = () => {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 bg-black border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full px-4 py-2 bg-black/50 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-400 text-white placeholder-gray-400"
               placeholder="Enter your password"
             />
             <button

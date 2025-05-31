@@ -6,10 +6,10 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
 
   return (
-    <div className="min-h-screen bg-[#0b0f2a] flex items-center justify-center px-6>
+    <div className="min-h-screen bg-[#0b0f2a] flex items-center justify-center px-6">
       <div
         className="flex rounded-xl overflow-hidden w-full max-w-6xl text-white border-2"
-        style={{ backgroundColor: "#0b0f2a",marginTop: "2px" }}
+        style={{ backgroundColor: "#0b0f2a", marginTop: "2px" }}
       >
         {/* Left Side with Image */}
         <div className="w-1/2 bg-blue-100 flex items-center justify-center">

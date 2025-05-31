@@ -78,8 +78,17 @@ export default function SafetyGuidelines() {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white p-8">
-      <h1 className="text-4xl font-bold mb-6 text-center">⛏️ Coal Mining Safety Guidelines</h1>
+    <div
+      className="min-h-screen p-8 text-white"
+      style={{
+        background: `linear-gradient(to top right, rgba(68, 17, 236, 0.7), transparent 40%), 
+                     linear-gradient(to top left, rgba(68, 17, 236, 0.7), transparent 40%), 
+                     rgb(1, 8, 27)`,
+      }}
+    >
+      <h1 className="text-4xl font-bold mb-6 text-center">
+        ⛏️ Coal Mining Safety Guidelines
+      </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {guidelines.map((item, index) => (
           <motion.div
@@ -97,8 +106,9 @@ export default function SafetyGuidelines() {
           </motion.div>
         ))}
       </div>
-      <p className="mt-10 text-center text-gray-400">
-        Following these simple rules can help protect lives in coal mining operations. Stay safe! ⚠️
+      <p className="mt-10 text-center text-gray-300">
+        Following these simple rules can help protect lives in coal mining
+        operations. Stay safe! ⚠️
       </p>
     </div>
   );

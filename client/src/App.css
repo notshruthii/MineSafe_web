@@ -1,0 +1,76 @@
+/* App.css */
+
+/* Full height + no scrollbars */
+html,
+body,
+#root {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #01081B;
+    color: white;
+}
+
+/* Shared background for all pages */
+.background {
+    background:
+        linear-gradient(to top right, rgba(68, 17, 236, 0.7), transparent 40%),
+        linear-gradient(to top left, rgba(68, 17, 236, 0.7), transparent 40%),
+        rgb(1, 8, 27);
+    background-image: url('/coal.png');
+    background-blend-mode: overlay;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* Navbar styling */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: transparent;
+    color: white;
+}
+
+/* Button styling */
+button,
+.btn {
+    padding: 10px 20px;
+    background-color: white;
+    color: #01081B;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 0 10px;
+}
+
+button:hover,
+.btn:hover {
+    background-color: #ccc;
+}
+
+/* Link reset */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Headings */
+h1,
+h2,
+h3 {
+    margin: 0;
+    color: white;
+}
+
+/* Responsive spacing */
+.page-content {
+    padding: 2rem;
+    text-align: center;
+}
