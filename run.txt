@@ -1,0 +1,4 @@
+Install Ollama from google.(make sure the PATH variable is updates to include  ollama)
+in terminal run: ollama pull gemma:2b which is the model were using
+then to test if its working go to hoppscoth and send a post request in the form of json.
+itll return a message saying file generation successfl and a report.txt file should be in the folder.
