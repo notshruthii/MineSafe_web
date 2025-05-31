@@ -56,7 +56,7 @@ const handleSubmit = async (e) => {
 
   return (
     <div className="min-h-screen bg-cover bg-center p-8" style={{ backgroundImage: "url('/coal.jpg')" }}>
-      <div className="bg-white bg-opacity-90 p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+      <div className="bg-dark bg-opacity-90 p-6 rounded-lg shadow-md max-w-2xl mx-auto">
         <h1 className="text-2xl font-bold mb-4">Safety Tools Checklist</h1>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <label className="block">
