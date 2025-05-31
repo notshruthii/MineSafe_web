@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase'; // ✅ Make sure this points to your firebase config
+import { auth, db } from '../firebase'; 
 
-const ManagersLogin = () => {
+const ManagersLogin = ({ embedded = false }) => {
   const navigate = useNavigate();
   const [managerId, setManagerId] = useState('');
   const [password, setPassword] = useState('');
@@ -14,10 +14,10 @@ const ManagersLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const email = `${managerId}@minesafe.com`; // 🔁 Match the auth user email
+    const email = `${managerId}@minesafe.com`; 
 
     try {
-      await signInWithEmailAndPassword(auth, email, password); // 🔐 Auth login
+      await signInWithEmailAndPassword(auth, email, password); 
 
       const docRef = doc(db, 'managers', managerId);
       const docSnap = await getDoc(docRef);
@@ -39,7 +39,11 @@ const ManagersLogin = () => {
     }
   };
 
-  return (
+ return embedded ? (
+    <form onSubmit={handleLogin}>
+      
+    </form>
+  ) : (
     <div className="min-h-screen flex justify-center items-center px-4" style={{ backgroundColor: '#1A1A1A' }}>
       <div className="w-full max-w-md p-8 bg-[#121212] text-white rounded-2xl shadow-xl border border-gray-700">
         <h2 className="text-3xl font-bold mb-6 text-center">Manager Login</h2>

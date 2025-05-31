@@ -4,7 +4,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase'; 
 
-const WorkersLogin = () => {
+const WorkersLogin = ({ embedded = false }) => {
   const navigate = useNavigate();
   const [employeeId, setEmployeeId] = useState('');
   const [password, setPassword] = useState('');
@@ -44,10 +44,15 @@ const WorkersLogin = () => {
     }
   };
 
-  return (
+  return embedded ? (
+    <form onSubmit={handleLogin}>
+      {/* form fields without full-page wrapper */}
+    </form>
+  ) : (
     <div className="min-h-screen flex justify-center items-center px-4" style={{ backgroundColor: '#1A1A1A' }}>
       <div className="w-full max-w-md p-8 bg-[#121212] text-white rounded-2xl shadow-xl border border-gray-700">
         <h2 className="text-3xl font-bold mb-6 text-center">Worker Login</h2>
+        
 
         <form onSubmit={handleLogin}>
           <div className="mb-4">

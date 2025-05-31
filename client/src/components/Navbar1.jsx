@@ -5,7 +5,7 @@ import coal_logo from "./coal5.png";
 const Navbar = () => {
   return (
     <nav
-      className="navbar navbar-expand-lg navbar-light px-4"
+      className="navbar navbar-expand-lg navbar-light  px-4"
       style={{
         backgroundColor: "rgb(1, 8, 27)",
         
@@ -19,7 +19,7 @@ const Navbar = () => {
           style={{ height: "95px", marginLeft: "-28px" }}
         />
       </a>
-      <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <button className="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" >
         <span className="navbar-toggler-icon"></span>
       </button>
       <div className="" id="navbarNav">

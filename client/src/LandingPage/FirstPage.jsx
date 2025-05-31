@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import News from './NavbarComponents/News';
 
+
 const Test = () => {
   const navigate = useNavigate();
   const [loaded, setLoaded] = useState(false);
@@ -56,7 +57,7 @@ rgb(1, 8, 27)
             }}
           >
             <button
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate('/login')}
               className="px-4 py-2 fw-semibold rounded-pill"
               style={{
                 backgroundColor: "#FFFFFF",
