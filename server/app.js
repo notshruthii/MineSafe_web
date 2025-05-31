@@ -47,3 +47,27 @@ app.use("/api/manager", require("./routes/managerData"));
 // Server Listening
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
+// API Endpoint to generate report
+app.post('/submit-worker-data', async (req, res) => {
+  const { workerData } = req.body;
+
+  if (!workerData) {
+    return res.status(400).json({ error: "No worker data received." });
+  }
+
+  const python = spawn('python3', ['server/generate_report.py', workerData]);
+
+  python.stderr.on('data', (data) => {
+    console.error(`Python error: ${data}`);
+  });
+
+  python.on('close', (code) => {
+    if (code === 0) {
+      res.json({ message: 'Report generated successfully.' });
+    } else {
+      res.status(500).json({ error: 'Python script failed.' });
+    }
+  });
+});
