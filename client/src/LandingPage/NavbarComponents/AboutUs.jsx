@@ -26,6 +26,7 @@ const AboutUs = () => {
         <div
           className="container text-center"
           style={{
+            marginTop:"-200px",
             maxWidth: "800px",
             opacity: loaded ? 1 : 0,
             transform: loaded ? "translateY(0)" : "translateY(30px)",
