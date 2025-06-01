@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
-
-// List of "MineSafe" in various Indian languages (background watermark)
+import { useMemo } from "react";
 const indianWords = [
   "माइनसेफ", "மைன்சேஃப்", "ਮਾਈਨਸੇਫ਼", "మైన్సేఫ్", "ಮೈನ್ಸೇಫ್",
   "માઇનસેફ", "മൈന്സേഫ്", "ଓଡ଼ିଆ ମାଇନସେଫ୍", "MineSafe"
@@ -11,27 +10,55 @@ const indianWords = [
 // Generate randomized styles for watermark words
 const generateWordStyles = (count) => {
   const styles = [];
-  for (let i = 0; i < count; i++) {
-    const top = Math.random() * 95; // vh
-    const left = Math.random() * 95; // vw
-    const fontSize = Math.random() * (2.5 - 0.8) + 0.8; // rem
-    const rotate = Math.random() * 20 - 10; // degrees
-    const opacity = (Math.random() * (0.07 - 0.02) + 0.05).toFixed(3); // 0.05 to 0.15
+  const minDistance = 8; 
+
+  const isInCenter = (top, left) => {
+    return top > 35 && top < 65 && left > 45 && left < 65;
+  };
+
+  const isTooClose = (top, left) => {
+    return styles.some((style) => {
+      const existingTop = parseFloat(style.top);
+      const existingLeft = parseFloat(style.left);
+      const dTop = Math.abs(existingTop - top);
+      const dLeft = Math.abs(existingLeft - left);
+      return dTop < minDistance && dLeft < minDistance;
+    });
+  };
+
+  let tries = 0;
+  while (styles.length < count && tries < count * 20) {
+    const top = Math.random() * 95;
+    const left = Math.random() * 95;
+
+    if (isInCenter(top, left) || isTooClose(top, left)) {
+      tries++;
+      continue;
+    }
+
+    const fontSize = Math.random() * (2.5 - 0.8) + 0.8;
+    const rotate = Math.random() * 20 - 10;
+    const opacity = (Math.random() * (0.07 - 0.02) + 0.05).toFixed(3);
+
     styles.push({
       top: `${top}vh`,
       left: `${left}vw`,
       fontSize: `${fontSize}rem`,
       transform: `rotate(${rotate}deg) scale(0.9)`,
-      animationDelay: `${i * 0.2}s`,
+      animationDelay: `${styles.length * 0.2}s`,
       opacity: opacity,
     });
+
+    tries++;
   }
+
   return styles;
 };
 
-// Watermark component
+
 const ScatteredWords = ({ wordList, count }) => {
-  const styles = generateWordStyles(count);
+  const styles = useMemo(() => generateWordStyles(count), [count]);
+
   return (
     <div
       style={{
@@ -78,16 +105,20 @@ const ScatteredWords = ({ wordList, count }) => {
   );
 };
 
+
+
 const Test = () => {
   const navigate = useNavigate();
   const [newsItems, setNewsItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const api = import.meta.env.VITE_FIREBASE_API_KEY_NEWS ;
 
   useEffect(() => {
     const fetchNews = async () => {
       try {
         const response = await fetch(
-          "https://newsapi.org/v2/everything?q=coal+mining&language=en&sortBy=publishedAt&pageSize=10&apiKey=0aa4e9f089cb44e8afa708efff9a4f49"
+          
+          `https://newsapi.org/v2/everything?q=coal%20mine%20AND%20India&language=en&sortBy=publishedAt&apiKey=${api}`
         );
         const data = await response.json();
         if (data.status === "ok") {
@@ -107,7 +138,7 @@ const Test = () => {
     fetchNews();
 
     // Refresh news every 5 minutes (300000 ms)
-    const intervalId = setInterval(fetchNews, 300000);
+    const intervalId = setInterval(fetchNews, 200000);
 
     return () => clearInterval(intervalId);
   }, []);
