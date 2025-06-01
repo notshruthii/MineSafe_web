@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
-import { useMemo } from "react";
+
 const indianWords = [
   "माइनसेफ", "மைன்சேஃப்", "ਮਾਈਨਸੇਫ਼", "మైన్సేఫ్", "ಮೈನ್ಸೇಫ್",
   "માઇનસેફ", "മൈന്സേഫ്", "ଓଡ଼ିଆ ମାଇନସେଫ୍", "MineSafe"
@@ -10,12 +10,9 @@ const indianWords = [
 // Generate randomized styles for watermark words
 const generateWordStyles = (count) => {
   const styles = [];
-  const minDistance = 8; 
+  const minDistance = 8;
 
-  const isInCenter = (top, left) => {
-    return top > 35 && top < 65 && left > 45 && left < 65;
-  };
-
+  const isInCenter = (top, left) => top > 35 && top < 65 && left > 45 && left < 65;
   const isTooClose = (top, left) => {
     return styles.some((style) => {
       const existingTop = parseFloat(style.top);
@@ -55,7 +52,6 @@ const generateWordStyles = (count) => {
   return styles;
 };
 
-
 const ScatteredWords = ({ wordList, count }) => {
   const styles = useMemo(() => generateWordStyles(count), [count]);
 
@@ -87,7 +83,6 @@ const ScatteredWords = ({ wordList, count }) => {
           {wordList[index % wordList.length]}
         </span>
       ))}
-
       <style>
         {`
           @keyframes popIn {
@@ -105,19 +100,19 @@ const ScatteredWords = ({ wordList, count }) => {
   );
 };
 
-
-
 const Test = () => {
   const navigate = useNavigate();
   const [newsItems, setNewsItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const api = import.meta.env.VITE_FIREBASE_API_KEY_NEWS ;
+  const [pageReady, setPageReady] = useState(false);
+  const [newsLoading, setNewsLoading] = useState(true);
+  const api = import.meta.env.VITE_FIREBASE_API_KEY_NEWS;
 
   useEffect(() => {
+    setPageReady(true); // Trigger animation on mount
+
     const fetchNews = async () => {
       try {
         const response = await fetch(
-          
           `https://newsapi.org/v2/everything?q=coal%20mine%20AND%20India&language=en&sortBy=publishedAt&apiKey=${api}`
         );
         const data = await response.json();
@@ -132,14 +127,11 @@ const Test = () => {
         console.error("Fetch error:", error);
         setNewsItems(["Unable to fetch news"]);
       }
-      setLoading(false);
+      setNewsLoading(false);
     };
 
     fetchNews();
-
-    // Refresh news every 5 minutes (300000 ms)
-    const intervalId = setInterval(fetchNews, 200000);
-
+    const intervalId = setInterval(fetchNews, 200000); // refresh every ~3.3 minutes
     return () => clearInterval(intervalId);
   }, []);
 
@@ -168,6 +160,9 @@ const Test = () => {
           style={{
             marginTop: "-10rem",
             maxWidth: "700px",
+            opacity: pageReady ? 1 : 0,
+            transform: pageReady ? "translateY(0)" : "translateY(30px)",
+            transition: "opacity 1.5s ease 1s, transform 1.5s ease 1s",
             background: "transparent",
           }}
         >
@@ -179,7 +174,15 @@ const Test = () => {
           </p>
 
           {/* Buttons */}
-          <div className="d-flex justify-content-center gap-3 flex-wrap mb-4" style={{ background: "transparent" }}>
+          <div
+            className="d-flex justify-content-center gap-3 flex-wrap mb-4"
+            style={{
+              opacity: pageReady ? 1 : 0,
+              transform: pageReady ? "translateY(0)" : "translateY(30px)",
+              transition: "opacity 1.5s ease 1.3s, transform 1.5s ease 1.3s",
+              background: "transparent",
+            }}
+          >
             <button
               onClick={() => navigate('/login')}
               className="px-4 py-2 fw-semibold rounded-pill"
@@ -220,7 +223,7 @@ const Test = () => {
           >
             <h6 className="text-warning mb-1 text-start px-3">📢 What's New / Press Releases</h6>
             <div className="overflow-hidden px-3" style={{ whiteSpace: "nowrap" }}>
-              {loading ? (
+              {newsLoading ? (
                 <span>Loading news...</span>
               ) : (
                 <marquee behavior="scroll" direction="left" scrollamount="6">
