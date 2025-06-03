@@ -145,7 +145,7 @@ const ManagerDashboard = () => {
 
       {/* Main Content */}
       <div className="flex-1 p-6">
-        <h1 className="text-3xl font-bold mb-6">Manager Dashboard</h1>
+        <h1 className="text-lg font-bold text-black overflow-hidden">Manager Dashboard</h1>
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">

@@ -30,9 +30,9 @@ const Navbar = () => {
         
           
           <Taskbar_names label="Report" to="/report" />
-          <Taskbar_names label="Careers" to="/task" />
-           <Taskbar_names label="About Us" to="/news" />
-             <Taskbar_names label="Contact Us" to="/resource" />
+          <Taskbar_names label="Career" to="/Career" />
+           <Taskbar_names label="About Us" to="/AboutUs" />
+             <Taskbar_names label="Contact Us" to="/Contactus" />
           <Taskbar_names label="Logout" to="/logout" className="text-danger" />
         </ul>
       </div>

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 
-
 const Test = () => {
   const navigate = useNavigate();
   const [loaded, setLoaded] = useState(false);
@@ -33,7 +32,6 @@ const Test = () => {
         WebkitBackdropFilter: "blur(12px)",
       }}
     >
-
       {/* Hero Section */}
       <main className="d-flex justify-content-center align-items-center flex-grow-1 py-5">
         <div
@@ -104,7 +102,6 @@ const Test = () => {
           </marquee>
         </div>
       </section>
-
     </div>
   );
 };

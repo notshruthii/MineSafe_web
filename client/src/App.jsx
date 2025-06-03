@@ -2,14 +2,14 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Header from "./WorkerPages/Header.jsx";
 import Navbar1 from "./components/Navbar1";
-
+import Contactus from "./LandingPage/NavbarComponents/Contactus.jsx";
 import AboutUs from "./LandingPage/NavbarComponents/AboutUs.jsx";
 import AttendanceApp from "./LandingPage/NavbarComponents/Attendance.jsx";
 import LandingPage from "./login/Landingpage1.jsx";
 import WorkerDash from './WorkerPages/Workersdashboard.jsx';
 import SafetyGuidelines from "./LandingPage/Safety_guidelines.jsx";
 import Test from "./LandingPage/FirstPage.jsx";
-
+import Career from "./LandingPage/NavbarComponents/Career.jsx";
 import WorkersLogin from "./WorkerPages/WorkersLogin.jsx";
 import Manager from './ManagerPages/ManagerHome.jsx'
 import ManagersLogin from "./ManagerPages/ManagersLogin.jsx";
@@ -36,7 +36,9 @@ const App = () => {
         <Route path="/" element={<Test />} />
         <Route path="/login" element={<Login />} />
         <Route path="/safety-guidelines" element={<SafetyGuidelines />} />
-        <Route path="/about-us" element={<AboutUs />} />
+        <Route path="/AboutUs" element={<AboutUs />} />
+        <Route path="/Career" element={<Career />} />
+        <Route path="/Contactus" element={<Contactus />} />
         <Route path="/workers-login" element={<WorkersLogin />} />
         <Route path="/manager-login" element={<ManagersLogin />} />
         <Route path="/worker-dashboard" element={<Header />} />

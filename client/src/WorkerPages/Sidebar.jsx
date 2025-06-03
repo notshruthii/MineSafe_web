@@ -1,28 +1,23 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { FaBars, FaTimes, FaClock, FaPen, FaSignOutAlt } from 'react-icons/fa';
+import { FaBars, FaTimes, FaClock, FaPen, FaSignOutAlt, FaExclamationTriangle } from 'react-icons/fa';
 import { GiHelmet } from 'react-icons/gi';
-
-
-
-import { FaExclamationTriangle } from "react-icons/fa";
-
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(true);
 
   return (
     <div
-      className={`bg-gray-100 text-gray-900 min-h-screen shadow-md transition-all duration-300 ${isOpen ? 'w-64' : 'w-16'} p-4 border-r`}
-      style={{ backdropFilter: 'blur(12px)' }} // subtle blur on container too
+      className={`bg-gray-100 text-black min-h-screen shadow-md transition-all duration-300 ${isOpen ? 'w-64' : 'w-16'} p-4 border-r`}
+      style={{ backdropFilter: 'blur(12px)' }}
     >
       <div className="flex justify-between items-center mb-6">
         <h2
-          className={`text-lg font-semibold transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'} overflow-hidden`}
+          className={`"text-xs font-semibold text-black overflow-hidden"'}`}
         >
           Dashboard
         </h2>
-        <button onClick={() => setIsOpen(!isOpen)} className="text-gray-700">
+        <button onClick={() => setIsOpen(!isOpen)} className="text-black">
           {isOpen ? <FaTimes /> : <FaBars />}
         </button>
       </div>
@@ -40,10 +35,10 @@ const Navbar = () => {
             key={to}
             to={to}
             className={({ isActive }) =>
-              `flex items-center gap-3 py-2 px-3 rounded-lg text-sm font-medium transition-colors duration-300
+              `flex items-center gap-3 py-2 px-3 rounded-lg text-sm font-medium transition-colors duration-300 text-black
               ${
                 isActive
-                  ? 'bg-white bg-opacity-30 backdrop-blur-md border border-white border-opacity-20 shadow-md text-gray-900'
+                  ? 'bg-white bg-opacity-30 backdrop-blur-md border border-white border-opacity-20 shadow-md'
                   : 'bg-white bg-opacity-10 backdrop-blur-md border border-transparent hover:border-white hover:border-opacity-20 hover:bg-white hover:bg-opacity-20'
               }`
             }
