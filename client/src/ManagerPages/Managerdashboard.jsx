@@ -230,7 +230,7 @@ const ManagerDashboard = () => {
                 ✕ Close
               </button>
 
-              <h2 className="text-2xl font-bold mb-4">
+              <h2 className="text-2xl font-bold mb-4 text-black">
                 Reports for {selectedWorker.fullName}
               </h2>
 
@@ -260,7 +260,7 @@ const ManagerDashboard = () => {
   );
 };
 
-// ✅ Card with dynamic color logic
+
 const Card = ({ title, value }) => {
   let valueColor = "text-black";
 
