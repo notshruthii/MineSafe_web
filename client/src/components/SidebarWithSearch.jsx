@@ -11,7 +11,7 @@ const SidebarWithSearch = ({ workers, onSelectWorker, onNavigate, selectedWorker
 
   return (
     <div className="w-64 bg-white shadow-md p-4 h-screen overflow-y-auto sticky top-0">
-      <h2 className="text-2xl font-bold mb-4">Dashboard</h2>
+      <h2 className="text-2xl font-bold mb-4 text-black">Dashboard</h2>
 
       
       <nav className="mb-6">
@@ -40,7 +40,7 @@ const SidebarWithSearch = ({ workers, onSelectWorker, onNavigate, selectedWorker
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold mb-2">Workers</h3>
+        <h3 className="text-lg font-semibold mb-2 text-black">Workers</h3>
         {filteredWorkers.length === 0 ? (
           <p className="text-sm text-gray-500">No workers found.</p>
         ) : (

@@ -12,7 +12,7 @@ const generateWordStyles = (count) => {
   const styles = [];
   const minDistance = 8;
 
-  const isInCenter = (top, left) => top > 35 && top < 65 && left > 45 && left < 65;
+  const isInCenter = (top, left) => top > 35 && top < 65 && left > 25 && left < 65;
   const isTooClose = (top, left) => {
     return styles.some((style) => {
       const existingTop = parseFloat(style.top);

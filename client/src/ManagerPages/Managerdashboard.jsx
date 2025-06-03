@@ -148,7 +148,7 @@ const ManagerDashboard = () => {
       />
 
       <div className="flex-1 p-6 text-black">
-        <h1 className="text-3xl font-bold mb-6">Manager Dashboard</h1>
+        <h1 className="text-3xl font-bold mb-6 text-black">Manager Dashboard</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <Card title="Total Workers" value={workers.length} />
@@ -159,7 +159,7 @@ const ManagerDashboard = () => {
 
         {activeTab === "abnormalities" && abnormalities.length > 0 && (
           <div className="mb-10">
-            <h2 className="text-2xl font-semibold mb-4">Recent Abnormalities</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-black">Recent Abnormalities</h2>
             <div className="flex flex-col space-y-4">
               {abnormalities.map((ab) => {
                 const isSelected = selectedAbnormalityTab === ab.id;
@@ -201,7 +201,7 @@ const ManagerDashboard = () => {
 
         {activeTab === "workers" && (
           <>
-            <h2 className="text-2xl font-semibold mb-4">Your Workers</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-black">Your Workers</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {workers.map((worker) => (
                 <div key={worker.id} className="bg-white p-4 rounded shadow text-black">
@@ -260,12 +260,25 @@ const ManagerDashboard = () => {
   );
 };
 
-const Card = ({ title, value }) => (
-  <div className="bg-white p-4 rounded shadow-md text-center hover:shadow-lg hover:scale-105 transform transition duration-300 ease-in-out cursor-pointer border text-black">
-    <h3 className="text-lg font-semibold">{title}</h3>
-    <p className="text-2xl font-bold">{value}</p>
-  </div>
-);
+// ✅ Card with dynamic color logic
+const Card = ({ title, value }) => {
+  let valueColor = "text-black";
+
+  if (typeof value === "number") {
+    if (title === "Submitted Today" || title === "Total Workers") {
+      valueColor = "text-green-600";
+    } else if (title === "Missing Submission" || title === "Abnormalities") {
+      valueColor = value > 0 ? "text-red-600" : "text-green-600";
+    }
+  }
+
+  return (
+    <div className="bg-white p-4 rounded shadow-md text-center hover:shadow-lg hover:scale-105 transform transition duration-300 ease-in-out cursor-pointer border text-black">
+      <h3 className="text-lg font-semibold text-black">{title}</h3>
+      <p className={`text-2xl font-bold ${valueColor}`}>{value}</p>
+    </div>
+  );
+};
 
 const ReportSection = ({ title, entries }) => (
   <div className="mb-6">
