@@ -53,10 +53,14 @@ const TaskLogging = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0b1e34] text-white p-6">
+    <div
+      className="min-h-screen bg-[#0b1e34] text-white p-6 bg-cover bg-center"
+      style={{ backgroundImage: "url('/coal.jpg')" }}
+    >
       <div className="max-w-3xl mx-auto bg-white bg-opacity-10 backdrop-blur-md p-8 rounded-xl shadow-xl border border-white border-opacity-20">
-        <h1 className="text-3xl font-semibold mb-8 text-center border-b border-white pb-3">Task Logging</h1>
-
+        <h1 className="text-3xl font-semibold mb-8 text-center border-b border-white pb-3">
+          Task Logging
+        </h1>
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label className="block mb-1 text-lg font-medium">Tasks Assigned</label>

@@ -8,7 +8,7 @@ export default function CoalMineUpdates() {
   const [loading, setLoading] = useState(true);
 
   // Use environment variable if available, else fallback to your placeholder key
-  const api = import.meta.env.VITE_FIREBASE_API_KEY_NEWS || "YOUR_API_KEY";
+  const api = import.meta.env.VITE_FIREBASE_API_KEY_NEWS ;
   const NEWS_API_URL = `https://newsapi.org/v2/everything?q=coal%20mine%20AND%20India&language=en&sortBy=publishedAt&apiKey=${api}`;
 
   useEffect(() => {

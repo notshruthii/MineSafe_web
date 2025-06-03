@@ -1,210 +1,163 @@
-import React from "react";
-import Profile_pic from './man_coal.webp';
+import React, { useEffect, useState } from "react";
+import { auth, db } from "../../firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
-const workerData = {
-  empID: "w123",
-  email: "w123@minesafe.com",
-  mgrName: "Amit Kumar",
-  firstName: "Aditya",
-  lastName: "Sharma",
-  phone: "+91 98765 43210",
-  position: "Underground Operator",
-  role: "Worker",
-  shift: "Morning (6:00 AM – 2:00 PM)",
-  location: "Tunnel 3, Site B",
-  readiness: {
-    start: "21.05.2025",
-    required: true,
-    progress: 35,
-    steps: [
-      { name: "Safety Briefing", progress: 100 },
-      { name: "PPE Inspection", progress: 20 },
-      { name: "Gas Detector Calibration", progress: 0 },
-      { name: "Emergency Drill Completed", progress: 0 },
-    ],
-  },
-};
+export default function WorkerProfile() {
+  const [workerData, setWorkerData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-export default function WorkerProfileDashboard() {
+  // Dummy data for performance and compliance (replace with real Firestore queries)
+  const [performanceMetrics, setPerformanceMetrics] = useState({
+    tasksCompleted: 42,
+    rating: 4.5,
+    projectsHandled: 7,
+  });
+
+  const [complianceTasks, setComplianceTasks] = useState([
+    { id: 1, title: "Safety Training", completed: true },
+    { id: 2, title: "Equipment Check", completed: false },
+    { id: 3, title: "Health Screening", completed: true },
+  ]);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        try {
+          const workersRef = collection(db, "workers");
+          const q = query(workersRef, where("email", "==", user.email));
+          const snapshot = await getDocs(q);
+
+          if (!snapshot.empty) {
+            setWorkerData(snapshot.docs[0].data());
+          } else {
+            console.log("Worker not found.");
+            setWorkerData(null);
+          }
+        } catch (error) {
+          console.error("Error fetching worker data:", error);
+          setWorkerData(null);
+        }
+      } else {
+        setWorkerData(null);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) return <div className="text-white p-6">Loading...</div>;
+  if (!workerData) return <div className="text-white p-6">No data found.</div>;
+
+  // Calculate compliance progress %
+  const completedCount = complianceTasks.filter((task) => task.completed).length;
+  const totalTasks = complianceTasks.length;
+  const compliancePercent = totalTasks > 0 ? (completedCount / totalTasks) * 100 : 0;
+
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        {/* Left Side */}
-        <div style={styles.left}>
+    <div className="bg-[#01081b] text-white min-h-screen flex flex-col md:flex-row p-6">
+      {/* Left Column */}
+      <div className="md:w-1/3 border-r border-gray-700 pr-6">
+        <div className="mb-4 text-center">
           <img
-            src={Profile_pic}
-            alt="Profile"
-            style={styles.image}
+            src="https://www.shutterstock.com/image-photo/mine-worker-554630599"
+            alt="Worker"
+            className="w-32 h-32 object-cover mx-auto rounded-md"
           />
-          <button style={styles.changeBtn}>Change Photo</button>
-
-          <div style={styles.section}>
-            <h2 style={styles.sectionTitle}>Employee Details</h2>
-            <p><strong>Employee ID:</strong> {workerData.empID}</p>
-            <p><strong>Name:</strong> {workerData.firstName} {workerData.lastName}</p>
-            <p><strong>Email:</strong> {workerData.email}</p>
-            <p><strong>Phone:</strong> {workerData.phone}</p>
-            <p><strong>Manager Name:</strong> {workerData.mgrName}</p>
-            <p><strong>Position:</strong> {workerData.position}</p>
-            <p><strong>Location:</strong> {workerData.location}</p>
-          </div>
+          <a href="#" className="text-blue-400 underline block mt-2">
+            Change Photo
+          </a>
         </div>
 
-        {/* Right Side */}
-        <div style={styles.right}>
-          <div style={styles.section}>
-            <h2 style={styles.sectionTitle}>Role & Shift</h2>
-            <p><strong>Role:</strong> {workerData.role}</p>
-            <p><strong>Shift:</strong> {workerData.shift}</p>
-          </div>
+        <h2 className="text-xl font-semibold mb-2">Employee Details</h2>
+        <hr className="border-gray-600 mb-3" />
+        <div className="space-y-2 text-sm">
+          <p>
+            <strong>Employee ID:</strong> {workerData.empID}
+          </p>
+          <p>
+            <strong>Name:</strong> {workerData.fullName}
+          </p>
+          <p>
+            <strong>Email:</strong> {workerData.email}
+          </p>
+          <p>
+            <strong>Phone:</strong> {workerData.contact || "N/A"}
+          </p>
+          <p>
+            <strong>Manager Name:</strong> {workerData.mgrName || "N/A"}
+          </p>
+          <p>
+            <strong>Position:</strong> {workerData.position || "Unknown"}
+          </p>
+          <p>
+            <strong>Location:</strong> {workerData.location || "Unknown"}
+          </p>
+        </div>
+      </div>
 
-          <div style={styles.section}>
-            <h2 style={styles.sectionTitle}>Work Readiness & Safety Compliance</h2>
-            <p><strong>Start Date:</strong> {workerData.readiness.start}</p>
-            <p>
-              <strong>Status:</strong>{" "}
-              <span style={styles.onboardingLabel}>In Progress</span>
-            </p>
-            <div style={styles.progressContainer}>
-              <div
-                style={{
-                  ...styles.progressBar,
-                  width: `${workerData.readiness.progress}%`,
-                }}
-              />
-            </div>
-            <p style={styles.progressText}>{workerData.readiness.progress}% Complete</p>
-          </div>
+      {/* Right Column */}
+      <div className="md:w-2/3 pl-6">
+        <h2 className="text-2xl font-semibold mb-4">
+          Work Readiness & Safety Compliance
+        </h2>
 
-          <div style={styles.section}>
-            <h2 style={styles.sectionTitle}>Compliance Tasks</h2>
-            {workerData.readiness.steps.map((step, idx) => (
-              <div key={idx} style={styles.taskItem}>
-                <p>{step.name}</p>
-                <div style={styles.taskProgressWrapper}>
-                  <div
-                    style={{
-                      ...styles.taskProgressBar,
-                      width: `${step.progress}%`,
-                    }}
-                  />
-                  <span style={styles.taskProgressText}>{step.progress}%</span>
-                </div>
-              </div>
+        <div className="mb-6">
+          <p>
+            <strong>Start Date:</strong> N/A
+          </p>
+          <p className="flex items-center mt-2">
+            <strong>Status:</strong>
+            <span className="ml-2 px-2 py-1 bg-yellow-600 text-white rounded">
+              {compliancePercent === 100 ? "Compliant" : "In Progress"}
+            </span>
+          </p>
+
+          {/* Progress Bar */}
+          <div className="w-full bg-gray-800 h-4 mt-3 rounded">
+            <div
+              className="h-full bg-green-500 rounded transition-all duration-500"
+              style={{ width: `${compliancePercent}%` }}
+            ></div>
+          </div>
+          <p className="text-sm mt-1">{Math.round(compliancePercent)}% Complete</p>
+        </div>
+
+        {/* Compliance Tasks */}
+        <h3 className="text-xl font-semibold mt-6 mb-2">Compliance Tasks</h3>
+        <hr className="border-gray-600 mb-4" />
+        {complianceTasks.length === 0 ? (
+          <p>No compliance tasks available.</p>
+        ) : (
+          <ul className="list-disc list-inside text-sm space-y-2">
+            {complianceTasks.map((task) => (
+              <li
+                key={task.id}
+                className={task.completed ? "text-green-400" : "text-red-400"}
+              >
+                {task.title} {task.completed ? "(Completed)" : "(Pending)"}
+              </li>
             ))}
+          </ul>
+        )}
+
+        {/* Performance Metrics */}
+        <div className="mt-8">
+          <h3 className="text-xl font-semibold mb-2">Performance Metrics</h3>
+          <hr className="border-gray-600 mb-3" />
+          <div className="space-y-2 text-sm">
+            <p>
+              <strong>Tasks Completed:</strong> {performanceMetrics.tasksCompleted}
+            </p>
+            <p>
+              <strong>Rating:</strong> {performanceMetrics.rating} / 5
+            </p>
+            <p>
+              <strong>Projects Handled:</strong> {performanceMetrics.projectsHandled}
+            </p>
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-// ---------- Styles ----------
-const styles = {
-  container: {
-    background: "#1A1A1A",
-    color: "#fff",
-    minHeight: "100vh",
-    padding: "2rem",
-    fontFamily: "Arial, sans-serif",
-    display: "flex",
-    justifyContent: "center",
-  },
-  card: {
-    display: "flex",
-    flexDirection: "row",
-    backgroundColor: "#111",
-    borderRadius: "12px",
-    padding: "2rem",
-    maxWidth: "1000px",
-    width: "100%",
-    gap: "2rem",
-    boxShadow: "0 0 30px rgba(255, 255, 255, 0.1)",
-  },
-  left: {
-    width: "300px",
-    borderRight: "1px solid #333",
-    paddingRight: "2rem",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  image: {
-    width: "150px",
-    height: "180px",
-    borderRadius: "8px",
-    objectFit: "cover",
-    border: "2px solid white",
-    marginBottom: "1rem",
-  },
-  changeBtn: {
-    background: "transparent",
-    color: "#0af",
-    border: "none",
-    cursor: "pointer",
-    marginBottom: "2rem",
-    textDecoration: "underline",
-  },
-  right: {
-    flex: 1,
-    paddingLeft: "1rem",
-  },
-  section: {
-    marginBottom: "2rem",
-  },
-  sectionTitle: {
-    fontSize: "1.2rem",
-    borderBottom: "1px solid #444",
-    marginBottom: "1rem",
-    paddingBottom: "0.5rem",
-  },
-  onboardingLabel: {
-    backgroundColor: "#a80",
-    padding: "2px 8px",
-    borderRadius: "6px",
-    fontSize: "0.8rem",
-    color: "#fff",
-  },
-  progressContainer: {
-    backgroundColor: "#333",
-    borderRadius: "6px",
-    overflow: "hidden",
-    height: "10px",
-    marginTop: "0.5rem",
-  },
-  progressBar: {
-    height: "100%",
-    backgroundColor: "#0af",
-  },
-  progressText: {
-    fontSize: "0.85rem",
-    marginTop: "0.3rem",
-    color: "#aaa",
-  },
-  taskItem: {
-    marginBottom: "1rem",
-  },
-  taskProgressWrapper: {
-    display: "flex",
-    alignItems: "center",
-    gap: "0.5rem",
-    backgroundColor: "#222",
-    borderRadius: "6px",
-    overflow: "hidden",
-    height: "8px",
-    marginTop: "0.2rem",
-    position: "relative",
-  },
-  taskProgressBar: {
-    height: "8px",
-    backgroundColor: "#0af",
-    borderRadius: "6px 0 0 6px",
-  },
-  taskProgressText: {
-    fontSize: "0.75rem",
-    color: "#aaa",
-    position: "absolute",
-    right: "5px",
-    top: "-18px",
-  },
-};

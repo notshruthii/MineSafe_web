@@ -26,13 +26,15 @@ const Navbar = () => {
         <ul className="navbar-nav ms-auto">
           <Taskbar_names label="Home" to="/" />
          <Taskbar_names label="Profile" to="/profile" />
-          
-        
-          
           <Taskbar_names label="Report" to="/report" />
+
           <Taskbar_names label="Career" to="/Career" />
            <Taskbar_names label="About Us" to="/AboutUs" />
              <Taskbar_names label="Contact Us" to="/Contactus" />
+
+         
+           <Taskbar_names label="About Us" to="/about" />
+
           <Taskbar_names label="Logout" to="/logout" className="text-danger" />
         </ul>
       </div>

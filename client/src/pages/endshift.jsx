@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc } from 'firebase/firestore';
 
@@ -7,24 +7,30 @@ const EndShift = () => {
   const [tasksCompleted, setTasksCompleted] = useState([]);
   const [toolsReturned, setToolsReturned] = useState('');
   const [remarks, setRemarks] = useState('');
+  const [workerId, setWorkerId] = useState(null);
+  const [managerId, setManagerId] = useState(null);
+
+  useEffect(() => {
+    const workerData = JSON.parse(localStorage.getItem("workerData"));
+    if (workerData) {
+      setWorkerId(workerData.employeeId);
+      setManagerId(workerData.managerId || "unknownManager");
+    }
+  }, []);
 
   const handleCheckboxChange = (e) => {
     const value = e.target.value;
     if (e.target.checked) {
-      setTasksCompleted((prev) => [...prev, value]);
+      setTasksCompleted(prev => [...prev, value]);
     } else {
-      setTasksCompleted((prev) => prev.filter((task) => task !== value));
+      setTasksCompleted(prev => prev.filter(task => task !== value));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const workerData = JSON.parse(localStorage.getItem("workerData"));
-    const userId = workerData?.employeeId;
-    const managerId = workerData?.managerId || "unknownManager";
-
-    if (!userId) {
+    if (!workerId) {
       alert("User not logged in. Please login first.");
       return;
     }
@@ -34,13 +40,13 @@ const EndShift = () => {
       tasksCompleted,
       toolsReturned,
       remarks,
-      userId,
+      userId: workerId,
       managerId,
       timestamp: new Date(),
     };
 
     try {
-      const endShiftsRef = collection(db, "workers", userId, "endShifts");
+      const endShiftsRef = collection(db, "workers", workerId, "endShifts");
       await addDoc(endShiftsRef, formData);
       alert('End of shift form submitted successfully');
 
@@ -56,10 +62,14 @@ const EndShift = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0b1e34] text-white p-6">
+    <div
+      className="min-h-screen bg-[#0b1e34] text-white p-6 bg-cover bg-center"
+      style={{ backgroundImage: "url('/coal.jpg')" }}
+    >
       <div className="max-w-3xl mx-auto bg-white bg-opacity-10 backdrop-blur-md p-8 rounded-xl shadow-xl border border-white border-opacity-20">
-        <h1 className="text-3xl font-semibold mb-8 text-center border-b border-white pb-3">End of Shift Report</h1>
-
+        <h1 className="text-3xl font-semibold mb-8 text-center border-b border-white pb-3">
+          End of Shift Report
+        </h1>
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label className="block mb-1 text-lg font-medium">End Time</label>
@@ -74,7 +84,7 @@ const EndShift = () => {
 
           <div>
             <label className="block mb-2 text-lg font-medium">Tasks Completed</label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-3">
               {['Coal Loading', 'Shaft Inspection', 'Safety Meeting', 'Equipment Cleaning', 'Documentation'].map(task => (
                 <label key={task} className="inline-flex items-center space-x-2">
                   <input
@@ -92,7 +102,7 @@ const EndShift = () => {
 
           <div>
             <label className="block mb-2 text-lg font-medium">Tools Returned</label>
-            <div className="space-x-4 text-lg">
+            <div className="space-x-6 text-lg">
               {['Yes', 'No'].map(option => (
                 <label key={option} className="inline-flex items-center space-x-2">
                   <input

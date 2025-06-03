@@ -11,6 +11,10 @@ import {
 } from "firebase/firestore";
 
 const ManagerDashboard = () => {
+  const [allReports, setAllReports] = useState({});
+  const [submittedToday, setSubmittedToday] = useState(0);
+  const [missingSubmissions, setMissingSubmissions] = useState(0);
+  const [activeTab, setActiveTab] = useState("abnormalities");
   const [workers, setWorkers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedWorker, setSelectedWorker] = useState(null);
@@ -23,9 +27,6 @@ const ManagerDashboard = () => {
   const [reportLoading, setReportLoading] = useState(false);
   const [abnormalities, setAbnormalities] = useState([]);
   const [selectedAbnormalityTab, setSelectedAbnormalityTab] = useState(null);
-  const [submittedToday, setSubmittedToday] = useState(0);
-  const [missingSubmissions, setMissingSubmissions] = useState(0);
-  const [activeTab, setActiveTab] = useState("abnormalities");
 
   useEffect(() => {
     if (abnormalities.length > 0) {
@@ -107,20 +108,40 @@ const ManagerDashboard = () => {
     setReportLoading(false);
   };
 
+  const getReports = async (worker) => {
+    const fetchLatest = async (subcollection) => {
+      const ref = collection(db, "workers", worker.id, subcollection);
+      const q = query(ref, orderBy("timestamp", "desc"), limit(1));
+      const snap = await getDocs(q);
+      return snap.empty ? null : snap.docs[0].data();
+    };
+
+    return {
+      startShift: await fetchLatest("startShifts"),
+      safetyTools: await fetchLatest("safetyTools"),
+      taskLogging: await fetchLatest("taskLogging"),
+      endShift: await fetchLatest("endShifts"),
+    };
+  };
+
   const fetchReportsForAllWorkers = async () => {
+    const reportsMap = {};
     const today = new Date().toLocaleDateString();
     let submitted = 0;
 
     for (const worker of workers) {
-      const ref = collection(db, "workers", worker.id, "startShifts");
-      const snapshot = await getDocs(query(ref, orderBy("timestamp", "desc"), limit(1)));
-      if (!snapshot.empty) {
-        const doc = snapshot.docs[0].data();
-        const reportDate = new Date(doc.date).toLocaleDateString();
-        if (reportDate === today) submitted++;
+      const reports = await getReports(worker);
+      reportsMap[worker.id] = reports;
+
+      if (
+        reports?.startShift?.date &&
+        new Date(reports.startShift.date).toLocaleDateString() === today
+      ) {
+        submitted += 1;
       }
     }
 
+    setAllReports(reportsMap);
     setSubmittedToday(submitted);
     setMissingSubmissions(workers.length - submitted);
   };
@@ -131,11 +152,10 @@ const ManagerDashboard = () => {
     }
   }, [workers]);
 
-  if (loading) return <div className="p-8 text-white">Loading...</div>;
+  if (loading) return <div className="p-8 text-black">Loading...</div>;
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
+    <div className="flex min-h-screen bg-gray-100 text-black">
       <SidebarWithSearch
         workers={workers}
         onSelectWorker={fetchAllFormReports}
@@ -143,144 +163,117 @@ const ManagerDashboard = () => {
         onNavigate={setActiveTab}
       />
 
-      {/* Main Content */}
-      <div className="flex-1 p-6">
-        <h1 className="text-lg font-bold text-black overflow-hidden">Manager Dashboard</h1>
+      <div className="flex-1 p-6 text-black">
+        <h1 className="text-3xl font-bold mb-6">Manager Dashboard</h1>
 
-        {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white p-4 rounded shadow-md text-center">
-            <h3 className="text-lg font-semibold text-gray-700">Total Workers</h3>
-            <p className="text-2xl font-bold text-blue-600">{workers.length}</p>
-          </div>
-          <div className="bg-white p-4 rounded shadow-md text-center">
-            <h3 className="text-lg font-semibold text-gray-700">Submitted Today</h3>
-            <p className="text-2xl font-bold text-green-600">{submittedToday}</p>
-          </div>
-          <div className="bg-white p-4 rounded shadow-md text-center">
-            <h3 className="text-lg font-semibold text-gray-700">Missing Submissions</h3>
-            <p className="text-2xl font-bold text-red-600">{missingSubmissions}</p>
-          </div>
+          <Card title="Total Workers" value={workers.length} />
+          <Card title="Submitted Today" value={submittedToday} />
+          <Card title="Missing Submission" value={missingSubmissions} />
+          <Card title="Abnormalities" value={abnormalities.length} />
         </div>
 
-        {/* Worker Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {workers.map((worker) => (
-            <div key={worker.id} className="bg-white p-4 rounded-xl shadow text-gray-800">
-              <h2 className="text-xl font-semibold">{worker.name || "Unnamed"}</h2>
-              <p>ID: {worker.id}</p>
-              <p>Name: {worker.fullName || "Not specified"}</p>
-              <p>Manager ID: {worker.mgrID}</p>
-              <button
-                className="mt-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                onClick={() => fetchAllFormReports(worker)}
-              >
-                View Reports
-              </button>
+        {activeTab === "abnormalities" && abnormalities.length > 0 && (
+          <div className="mb-10">
+            <h2 className="text-2xl font-semibold mb-4 text-black">Recent Abnormalities</h2>
+            <div className="flex flex-col space-y-4 text-black">
+              {abnormalities.map((ab) => {
+                const isSelected = selectedAbnormalityTab === ab.id;
+                return (
+                  <div
+                    key={ab.id}
+                    className="bg-red-100 border border-red-400 p-4 rounded-lg shadow cursor-pointer text-black"
+                    onMouseEnter={() => setSelectedAbnormalityTab(ab.id)}
+                    onMouseLeave={() => setSelectedAbnormalityTab(null)}
+                  >
+                    <p className="font-medium truncate text-black">
+                      {ab.description || "No description"}
+                    </p>
+                    <div
+                      className={`transition-all duration-1000 ease-in-out ${
+                        isSelected ? "max-h-[500px] opacity-100 mt-3" : "max-h-0 opacity-0 mt-0"
+                      }`}
+                    >
+                      <div className="bg-white border border-red-400 rounded-lg p-4 text-black">
+                        <div className="flex justify-between items-start mb-2">
+                          <p className="font-semibold">{ab.description}</p>
+                          <button className="text-sm bg-red-300 px-2 py-1 rounded hover:bg-red-400">
+                            Send Alert
+                          </button>
+                        </div>
+                        <p><strong>Worker:</strong> {ab.workerName} (ID: {ab.workerId})</p>
+                        <p><strong>Timestamp:</strong> {ab.timestamp?.seconds ? new Date(ab.timestamp.seconds * 1000).toLocaleString() : "N/A"}</p>
+                        <div className="mt-2 text-sm">
+                          {Object.entries(ab)
+                            .filter(([k]) => !["id", "workerName", "workerId", "timestamp", "description"].includes(k))
+                            .map(([key, val]) => (
+                              <p key={key}>
+                                <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>{" "}
+                                {typeof val === "boolean" ? (val ? "Yes" : "No") : val}
+                              </p>
+                            ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          ))}
-        </div>
+          </div>
+        )}
 
-        {/* Reports Section */}
+        {activeTab === "workers" && (
+          <>
+            <h2 className="text-2xl font-semibold mb-4 text-black">Your Workers</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-black">
+              {workers.map((worker) => (
+                <div key={worker.id} className="bg-white p-4 rounded shadow text-black">
+                  <h3 className="text-xl font-semibold">{worker.fullName || "Unnamed"}</h3>
+                  <p>ID: {worker.id}</p>
+                  <p>Manager ID: {worker.mgrID}</p>
+                  <button
+                    className="mt-3 px-4 py-2 bg-blue-300 rounded hover:bg-blue-400"
+                    onClick={() => fetchAllFormReports(worker)}
+                  >
+                    View Reports
+                  </button>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
         {selectedWorker && (
-          <div className="mt-8 bg-white p-6 rounded-xl shadow-lg max-w-4xl mx-auto text-gray-800">
-            <h2 className="text-2xl font-bold mb-4">
-              Reports for {selectedWorker.name}
-            </h2>
+          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 text-black">
+            <div className="relative bg-white p-8 rounded-2xl shadow-2xl max-w-3xl w-full mx-4 overflow-y-auto max-h-[90vh]">
+              <button
+                className="absolute top-3 right-3 bg-red-300 hover:bg-red-400 rounded-full px-3 py-1 text-sm"
+                onClick={() => setSelectedWorker(null)}
+              >
+                ✕ Close
+              </button>
 
-            {reportLoading ? (
-              <p>Loading reports...</p>
-            ) : (
-              <>
-                {/* Start Shift */}
-                <div className="mb-6">
-                  <h3 className="text-xl font-semibold mb-2">Start Shift</h3>
-                  {formReports.startShift ? (
-                    <ul className="list-disc list-inside">
-                      <li>Date: {formReports.startShift.date}</li>
-                      <li>Fit for Duty: {formReports.startShift.fitForDuty ? "Yes" : "No"}</li>
-                      <li>Pulse: {formReports.startShift.pulse}</li>
-                      <li>Temperature: {formReports.startShift.temperature} °C</li>
-                      <li>Start Time: {formReports.startShift.startTime}</li>
-                      <li>PPE:
-                        <ul className="ml-4 list-disc">
-                          {Object.entries(formReports.startShift.ppe || {}).map(([item, value]) => (
-                            <li key={item}>
-                              {item}: {value ? "✔" : "❌"}
-                            </li>
-                          ))}
-                        </ul>
-                      </li>
-                    </ul>
-                  ) : (
-                    <p>No start shift data available.</p>
-                  )}
-                </div>
+              <h2 className="text-2xl font-bold mb-4 text-black">Reports for {selectedWorker.fullName}</h2>
 
-                {/* Safety Tools */}
-                <div className="mb-6">
-                  <h3 className="text-xl font-semibold mb-2">Safety Tools</h3>
-                  {formReports.safetyTools ? (
-                    <ul className="list-disc list-inside">
-                      <li>User ID: {formReports.safetyTools.userId}</li>
-                      <li>Timestamp: {formReports.safetyTools.timestamp?.seconds ? new Date(formReports.safetyTools.timestamp.seconds * 1000).toLocaleString() : "N/A"}</li>
-                      <li>PPE:
-                        <ul className="ml-4 list-disc">
-                          {["gloves", "helmet", "boots", "vest", "glasses"].map((key) => (
-                            <li key={key}>
-                              {key}: {formReports.safetyTools[key] ? "✔" : "❌"}
-                            </li>
-                          ))}
-                        </ul>
-                      </li>
-                    </ul>
-                  ) : (
-                    <p>No safety tools data available.</p>
+              {reportLoading ? (
+                <p>Loading reports...</p>
+              ) : (
+                <>
+                  {formReports.startShift && (
+                    <ReportSection title="Start Shift" entries={formReports.startShift} />
                   )}
-                </div>
-
-                {/* Task Logging */}
-                <div className="mb-6">
-                  <h3 className="text-xl font-semibold mb-2">Task Logging</h3>
-                  {formReports.taskLogging ? (
-                    <ul className="list-disc list-inside">
-                      <li>Tools Issued: {formReports.taskLogging.toolsIssued}</li>
-                      <li>Task Remarks: {formReports.taskLogging.taskRemarks}</li>
-                      <li>Tasks Assigned:
-                        <ul className="ml-4 list-disc">
-                          {formReports.taskLogging.tasksAssigned?.map((task, i) => (
-                            <li key={i}>{task}</li>
-                          ))}
-                        </ul>
-                      </li>
-                    </ul>
-                  ) : (
-                    <p>No task logs data available.</p>
+                  {formReports.safetyTools && (
+                    <ReportSection title="Safety Tools" entries={formReports.safetyTools} />
                   )}
-                </div>
-
-                {/* End Shift */}
-                <div className="mb-6">
-                  <h3 className="text-xl font-semibold mb-2">End Shift</h3>
-                  {formReports.endShift ? (
-                    <ul className="list-disc list-inside">
-                      <li>End Time: {formReports.endShift.endTime}</li>
-                      <li>Tools Returned: {formReports.endShift.toolsReturned}</li>
-                      <li>Remarks: {formReports.endShift.remarks}</li>
-                      <li>Tasks Completed:
-                        <ul className="ml-4 list-disc">
-                          {formReports.endShift.tasksCompleted?.map((task, i) => (
-                            <li key={i}>{task}</li>
-                          ))}
-                        </ul>
-                      </li>
-                    </ul>
-                  ) : (
-                    <p>No end shift data available.</p>
+                  {formReports.taskLogging && (
+                    <ReportSection title="Task Logging" entries={formReports.taskLogging} />
                   )}
-                </div>
-              </>
-            )}
+                  {formReports.endShift && (
+                    <ReportSection title="End Shift" entries={formReports.endShift} />
+                  )}
+                </>
+              )}
+            </div>
           </div>
         )}
       </div>
@@ -288,5 +281,50 @@ const ManagerDashboard = () => {
   );
 };
 
-export default ManagerDashboard;
+const Card = ({ title, value }) => {
+  let valueColor = "text-black";
 
+  if (typeof value === "number") {
+    if (title === "Submitted Today" || title === "Total Workers") {
+      valueColor = "text-green-600";
+    } else if (title === "Missing Submission" || title === "Abnormalities") {
+      valueColor = value > 0 ? "text-red-600" : "text-green-600";
+    }
+  }
+
+  return (
+    <div className="bg-white p-4 rounded shadow-md text-center hover:shadow-lg hover:scale-105 transform transition duration-300 ease-in-out cursor-pointer border text-black">
+      <h3 className="text-lg font-semibold">{title}</h3>
+      <p className={`text-2xl font-bold ${valueColor}`}>{value}</p>
+    </div>
+  );
+};
+
+const ReportSection = ({ title, entries }) => (
+  <div className="mb-6 text-black">
+    <h3 className="text-xl font-semibold mb-2">{title}</h3>
+    <ul className="list-disc ml-6">
+      {Object.entries(entries).map(([key, value]) =>
+        typeof value === "object" ? (
+          <li key={key}>
+            <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>
+            <ul className="ml-4 list-disc">
+              {Object.entries(value).map(([k, v]) => (
+                <li key={k}>
+                  {k.charAt(0).toUpperCase() + k.slice(1)}: {v ? "Yes" : "No"}
+                </li>
+              ))}
+            </ul>
+          </li>
+        ) : (
+          <li key={key}>
+            <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>{" "}
+            {typeof value === "boolean" ? (value ? "Yes" : "No") : value}
+          </li>
+        )
+      )}
+    </ul>
+  </div>
+);
+
+export default ManagerDashboard;

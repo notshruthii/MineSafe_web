@@ -8,7 +8,7 @@ const SafetyTools = () => {
     glasses: false,
     gloves: false,
     boots: false,
-    vest: false
+    vest: false,
   });
 
   const handleChange = (e) => {
@@ -42,7 +42,7 @@ const SafetyTools = () => {
         glasses: false,
         gloves: false,
         boots: false,
-        vest: false
+        vest: false,
       });
     } catch (err) {
       console.error("Error submitting safety tools:", err);
@@ -51,11 +51,16 @@ const SafetyTools = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0b1e34] text-white p-6">
+    <div
+      className="min-h-screen bg-[#0b1e34] text-white p-6 bg-cover bg-center"
+      style={{ backgroundImage: "url('/coal.jpg')" }}
+    >
       <div className="max-w-2xl mx-auto bg-white bg-opacity-10 backdrop-blur-md p-8 rounded-xl shadow-xl border border-white border-opacity-20">
-        <h1 className="text-3xl font-semibold mb-8 text-center border-b border-white pb-3">Safety Tools Checklist</h1>
+        <h1 className="text-3xl font-semibold mb-8 text-center border-b border-white pb-3">
+          Safety Tools Checklist
+        </h1>
         <form className="space-y-5" onSubmit={handleSubmit}>
-          {['helmet', 'glasses', 'gloves', 'boots', 'vest'].map(item => (
+          {['helmet', 'glasses', 'gloves', 'boots', 'vest'].map((item) => (
             <label key={item} className="flex items-center space-x-3 text-lg">
               <input
                 type="checkbox"

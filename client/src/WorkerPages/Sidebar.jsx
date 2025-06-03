@@ -5,7 +5,6 @@ import {
   FaTimes,
   FaClock,
   FaPen,
-  FaSignOutAlt,
   FaExclamationTriangle,
 } from 'react-icons/fa';
 import { GiHelmet } from 'react-icons/gi';
@@ -18,7 +17,7 @@ const Navbar = () => {
     { to: '/workers/safety-tools', icon: <GiHelmet />, label: 'Safety Tools' },
     { to: '/workers/task-logging', icon: <FaPen />, label: 'Task Logging' },
     { to: '/workers/end-shift', icon: <FaClock />, label: 'End Shift' },
-   // { to: '/workers/logout', icon: <FaSignOutAlt />, label: 'Logout' },
+    // { to: '/workers/logout', icon: <FaSignOutAlt />, label: 'Logout' },
     { to: '/workers/report', icon: <FaExclamationTriangle />, label: 'Report' },
   ];
 
@@ -31,9 +30,17 @@ const Navbar = () => {
     >
       {/* Header Toggle */}
       <div className="flex justify-between items-center mb-6">
-        {isOpen && <h2 className="text-xs font-semibold text-black">Dashboard</h2>}
-        <button onClick={() => setIsOpen(!isOpen)} className="text-black ml-auto">
-          {isOpen ? <FaTimes /> : <FaBars />}
+        {isOpen && (
+          <h2 className="text-xs font-semibold text-black select-none">
+            Dashboard
+          </h2>
+        )}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="text-black focus:outline-none"
+          aria-label={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+        >
+          {isOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
         </button>
       </div>
 
@@ -56,6 +63,9 @@ const Navbar = () => {
                 {icon}
                 <span className="text-sm">{label}</span>
               </div>
+            )}
+            {!isOpen && (
+              <div className="text-lg flex justify-center w-full">{icon}</div>
             )}
           </NavLink>
         ))}
