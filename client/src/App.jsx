@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Common Components
 import Navbar1 from "./components/Navbar1";
@@ -33,8 +33,12 @@ import ManagersLogin from "./ManagerPages/ManagersLogin.jsx";
 import Manager from './ManagerPages/ManagerHome.jsx';
 import ManagerDashboard from "./ManagerPages/Managerdashboard.jsx";
 
+import ProtectedRoute from './components/ProtectedRoute';
+import Unauthorized from './pages/Unauthorized';
+
 const App = () => {
   return (
+    <Router>
     <div
       className="min-h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/coal.png')" }}
@@ -58,15 +62,35 @@ const App = () => {
 
         {/* Worker Routes */}
         <Route path="/workers-login" element={<WorkersLogin />} />
-        <Route path="/worker-dashboard" element={<Header />} />
+        <Route
+           path="/worker-dashboard"
+           element={
+            <ProtectedRoute allowedRoles={['worker']}>
+              <Header />
+            </ProtectedRoute>
+     }
+       />
         <Route path="/workers/*" element={<WorkerDash />} />
 
         {/* Manager Routes */}
         <Route path="/manager-login" element={<ManagersLogin />} />
         <Route path="/manager" element={<Manager />} />
-        <Route path="/manager-dashboard" element={<ManagerDashboard />} />
+        <Route
+          path="/manager-dashboard"
+          element={
+            <ProtectedRoute allowedRoles={['manager']}>
+          <ManagerDashboard />
+          </ProtectedRoute>
+      }
+      />
+       {/* Unauthorized */}
+        <Route path="/unauthorized" element={<Unauthorized />} />
+
+        {/* Optional catch-all or 404 */}
+        {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
     </div>
+     </Router>
   );
 };
 
