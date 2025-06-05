@@ -24,8 +24,8 @@ const WorkersLogin = ({ embedded = false }) => {
 
       if (docSnap.exists()) {
         const workerData = docSnap.data();
-        workerData.employeeId = employeeId;
-        localStorage.setItem('workerData', JSON.stringify(workerData));
+        const userData = { ...workerData, role: 'worker', id: employeeId };
+        localStorage.setItem('user', JSON.stringify(userData));
         setError('');
         navigate('/worker-dashboard');
       } else {
