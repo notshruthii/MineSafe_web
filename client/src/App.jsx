@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 // Common Components
 import Navbar1 from "./components/Navbar1";
@@ -38,7 +38,6 @@ import Unauthorized from './pages/Unauthorized';
 
 const App = () => {
   return (
-    <Router>
     <div
       className="min-h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/coal.png')" }}
@@ -63,13 +62,13 @@ const App = () => {
         {/* Worker Routes */}
         <Route path="/workers-login" element={<WorkersLogin />} />
         <Route
-           path="/worker-dashboard"
-           element={
+          path="/worker-dashboard"
+          element={
             <ProtectedRoute allowedRoles={['worker']}>
               <Header />
             </ProtectedRoute>
-     }
-       />
+          }
+        />
         <Route path="/workers/*" element={<WorkerDash />} />
 
         {/* Manager Routes */}
@@ -79,18 +78,18 @@ const App = () => {
           path="/manager-dashboard"
           element={
             <ProtectedRoute allowedRoles={['manager']}>
-          <ManagerDashboard />
-          </ProtectedRoute>
-      }
-      />
-       {/* Unauthorized */}
+              <ManagerDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Unauthorized */}
         <Route path="/unauthorized" element={<Unauthorized />} />
 
         {/* Optional catch-all or 404 */}
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
     </div>
-     </Router>
   );
 };
 
