@@ -34,8 +34,7 @@ const Navbar = () => {
           { to: '/workers/safety-tools', icon: <GiHelmet />, label: 'Safety Tools' },
           { to: '/workers/task-logging', icon: <FaPen />, label: 'Task Logging' },
           { to: '/workers/end-shift', icon: <FaClock />, label: 'End Shift' },
-          { to: '/workers/logout', icon: <FaSignOutAlt />, label: 'Logout' },
-          { to: '/workers/report', icon: <FaExclamationTriangle />, label: 'Report' },
+          
         ].map(({ to, icon, label }) => (
           <NavLink
             key={to}
