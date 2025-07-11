@@ -53,35 +53,64 @@ const TaskLogging = () => {
   };
 
   return (
-    <div className="min-h-screen bg-cover bg-center p-8" style={{ backgroundImage: "url('/coal.jpg')" }}>
-      <div className="bg-dark bg-opacity-90 p-6 rounded-lg shadow-md max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold mb-4">Task Logging</h1>
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <label className="block font-semibold">Tasks Assigned:</label>
-          <select multiple className="border p-2 w-full" value={tasksAssigned} onChange={handleTaskChange}>
-            <option value="Drilling">Drilling</option>
-            <option value="Blasting">Blasting</option>
-            <option value="Material Transport">Material Transport</option>
-            <option value="Inspection">Inspection</option>
-            <option value="Equipment Maintenance">Equipment Maintenance</option>
-          </select>
+    <div
+      className="min-h-screen bg-[#0b1e34] text-white p-6 bg-cover bg-center"
+      style={{ backgroundImage: "url('/coal.jpg')" }}
+    >
+      <div className="max-w-3xl mx-auto bg-white bg-opacity-10 backdrop-blur-md p-8 rounded-xl shadow-xl border border-white border-opacity-20">
+        <h1 className="text-3xl font-semibold mb-8 text-center border-b border-white pb-3">
+          Task Logging
+        </h1>
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          <div>
+            <label className="block mb-1 text-lg font-medium">Tasks Assigned</label>
+            <select
+              multiple
+              value={tasksAssigned}
+              onChange={handleTaskChange}
+              className="w-full p-2 rounded bg-white text-black border border-gray-300"
+              required
+            >
+              <option value="Drilling">Drilling</option>
+              <option value="Blasting">Blasting</option>
+              <option value="Material Transport">Material Transport</option>
+              <option value="Inspection">Inspection</option>
+              <option value="Equipment Maintenance">Equipment Maintenance</option>
+            </select>
+            <p className="text-sm mt-1 text-gray-200">Hold Ctrl/Cmd to select multiple</p>
+          </div>
 
-          <input
-            type="text"
-            placeholder="Tools/Machinery Issued"
-            className="border p-2 w-full"
-            value={toolsIssued}
-            onChange={e => setToolsIssued(e.target.value)}
-          />
-          <textarea
-            placeholder="Task Remarks"
-            className="border p-2 w-full"
-            rows={4}
-            value={taskRemarks}
-            onChange={e => setTaskRemarks(e.target.value)}
-          ></textarea>
+          <div>
+            <label className="block mb-1 text-lg font-medium">Tools/Machinery Issued</label>
+            <input
+              type="text"
+              placeholder="e.g. Jackhammer, Drill Rig"
+              value={toolsIssued}
+              onChange={e => setToolsIssued(e.target.value)}
+              className="w-full p-2 rounded bg-white text-black border border-gray-300"
+              required
+            />
+          </div>
 
-          <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Submit</button>
+          <div>
+            <label className="block mb-1 text-lg font-medium">Task Remarks</label>
+            <textarea
+              placeholder="Additional notes or instructions"
+              value={taskRemarks}
+              onChange={e => setTaskRemarks(e.target.value)}
+              rows={4}
+              className="w-full p-2 rounded bg-white text-black border border-gray-300"
+            />
+          </div>
+
+          <div className="text-center mt-6">
+            <button
+              type="submit"
+              className="bg-[#123456] hover:bg-[#102a45] transition duration-200 text-white px-6 py-2 rounded text-lg font-medium"
+            >
+              Submit
+            </button>
+          </div>
         </form>
       </div>
     </div>

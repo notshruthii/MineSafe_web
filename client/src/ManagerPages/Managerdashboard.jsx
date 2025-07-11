@@ -108,6 +108,22 @@ const ManagerDashboard = () => {
     setReportLoading(false);
   };
 
+  const getReports = async (worker) => {
+    const fetchLatest = async (subcollection) => {
+      const ref = collection(db, "workers", worker.id, subcollection);
+      const q = query(ref, orderBy("timestamp", "desc"), limit(1));
+      const snap = await getDocs(q);
+      return snap.empty ? null : snap.docs[0].data();
+    };
+
+    return {
+      startShift: await fetchLatest("startShifts"),
+      safetyTools: await fetchLatest("safetyTools"),
+      taskLogging: await fetchLatest("taskLogging"),
+      endShift: await fetchLatest("endShifts"),
+    };
+  };
+
   const fetchReportsForAllWorkers = async () => {
     const reportsMap = {};
     const today = new Date().toLocaleDateString();
@@ -148,7 +164,7 @@ const ManagerDashboard = () => {
       />
 
       <div className="flex-1 p-6 text-black">
-        <h1 className="text-3xl font-bold mb-6 text-black">Manager Dashboard</h1>
+        <h1 className="text-3xl font-bold mb-6">Manager Dashboard</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <Card title="Total Workers" value={workers.length} />
@@ -160,7 +176,7 @@ const ManagerDashboard = () => {
         {activeTab === "abnormalities" && abnormalities.length > 0 && (
           <div className="mb-10">
             <h2 className="text-2xl font-semibold mb-4 text-black">Recent Abnormalities</h2>
-            <div className="flex flex-col space-y-4">
+            <div className="flex flex-col space-y-4 text-black">
               {abnormalities.map((ab) => {
                 const isSelected = selectedAbnormalityTab === ab.id;
                 return (
@@ -170,12 +186,18 @@ const ManagerDashboard = () => {
                     onMouseEnter={() => setSelectedAbnormalityTab(ab.id)}
                     onMouseLeave={() => setSelectedAbnormalityTab(null)}
                   >
-                    <p className="font-medium truncate">{ab.description || "No description"}</p>
-                    <div className={`transition-all duration-1000 ease-in-out ${isSelected ? "max-h-[500px] opacity-100 mt-3" : "max-h-0 opacity-0 mt-0"}`}>
+                    <p className="font-medium truncate text-black">
+                      {ab.description || "No description"}
+                    </p>
+                    <div
+                      className={`transition-all duration-1000 ease-in-out ${
+                        isSelected ? "max-h-[500px] opacity-100 mt-3" : "max-h-0 opacity-0 mt-0"
+                      }`}
+                    >
                       <div className="bg-white border border-red-400 rounded-lg p-4 text-black">
                         <div className="flex justify-between items-start mb-2">
                           <p className="font-semibold">{ab.description}</p>
-                          <button className="text-sm bg-red-300 text-black px-2 py-1 rounded hover:bg-red-400">
+                          <button className="text-sm bg-red-300 px-2 py-1 rounded hover:bg-red-400">
                             Send Alert
                           </button>
                         </div>
@@ -186,7 +208,8 @@ const ManagerDashboard = () => {
                             .filter(([k]) => !["id", "workerName", "workerId", "timestamp", "description"].includes(k))
                             .map(([key, val]) => (
                               <p key={key}>
-                                <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {typeof val === "boolean" ? (val ? "Yes" : "No") : val}
+                                <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>{" "}
+                                {typeof val === "boolean" ? (val ? "Yes" : "No") : val}
                               </p>
                             ))}
                         </div>
@@ -202,14 +225,14 @@ const ManagerDashboard = () => {
         {activeTab === "workers" && (
           <>
             <h2 className="text-2xl font-semibold mb-4 text-black">Your Workers</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-black">
               {workers.map((worker) => (
                 <div key={worker.id} className="bg-white p-4 rounded shadow text-black">
-                  <h3 className="text-xl font-semibold text-black">{worker.fullName || "Unnamed"}</h3>
+                  <h3 className="text-xl font-semibold">{worker.fullName || "Unnamed"}</h3>
                   <p>ID: {worker.id}</p>
                   <p>Manager ID: {worker.mgrID}</p>
                   <button
-                    className="mt-3 px-4 py-2 bg-blue-300 text-black rounded hover:bg-blue-400"
+                    className="mt-3 px-4 py-2 bg-blue-300 rounded hover:bg-blue-400"
                     onClick={() => fetchAllFormReports(worker)}
                   >
                     View Reports
@@ -221,18 +244,16 @@ const ManagerDashboard = () => {
         )}
 
         {selectedWorker && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
-            <div className="relative bg-white p-8 rounded-2xl shadow-2xl max-w-3xl w-full mx-4 overflow-y-auto max-h-[90vh] text-black">
+          <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 text-black">
+            <div className="relative bg-white p-8 rounded-2xl shadow-2xl max-w-3xl w-full mx-4 overflow-y-auto max-h-[90vh]">
               <button
-                className="absolute top-3 right-3 text-black bg-red-300 hover:bg-red-400 rounded-full px-3 py-1 text-sm"
+                className="absolute top-3 right-3 bg-red-300 hover:bg-red-400 rounded-full px-3 py-1 text-sm"
                 onClick={() => setSelectedWorker(null)}
               >
                 ✕ Close
               </button>
 
-              <h2 className="text-2xl font-bold mb-4 text-black">
-                Reports for {selectedWorker.fullName}
-              </h2>
+              <h2 className="text-2xl font-bold mb-4 text-black">Reports for {selectedWorker.fullName}</h2>
 
               {reportLoading ? (
                 <p>Loading reports...</p>
@@ -260,7 +281,6 @@ const ManagerDashboard = () => {
   );
 };
 
-
 const Card = ({ title, value }) => {
   let valueColor = "text-black";
 
@@ -274,16 +294,16 @@ const Card = ({ title, value }) => {
 
   return (
     <div className="bg-white p-4 rounded shadow-md text-center hover:shadow-lg hover:scale-105 transform transition duration-300 ease-in-out cursor-pointer border text-black">
-      <h3 className="text-lg font-semibold text-black">{title}</h3>
+      <h3 className="text-lg font-semibold">{title}</h3>
       <p className={`text-2xl font-bold ${valueColor}`}>{value}</p>
     </div>
   );
 };
 
 const ReportSection = ({ title, entries }) => (
-  <div className="mb-6">
-    <h3 className="text-xl font-semibold mb-2 text-black">{title}</h3>
-    <ul className="list-disc ml-6 text-black">
+  <div className="mb-6 text-black">
+    <h3 className="text-xl font-semibold mb-2">{title}</h3>
+    <ul className="list-disc ml-6">
       {Object.entries(entries).map(([key, value]) =>
         typeof value === "object" ? (
           <li key={key}>
@@ -306,21 +326,5 @@ const ReportSection = ({ title, entries }) => (
     </ul>
   </div>
 );
-
-const getReports = async (worker) => {
-  const fetchLatest = async (subcollection) => {
-    const ref = collection(db, "workers", worker.id, subcollection);
-    const q = query(ref, orderBy("timestamp", "desc"), limit(1));
-    const snap = await getDocs(q);
-    return snap.empty ? null : snap.docs[0].data();
-  };
-
-  return {
-    startShift: await fetchLatest("startShifts"),
-    safetyTools: await fetchLatest("safetyTools"),
-    taskLogging: await fetchLatest("taskLogging"),
-    endShift: await fetchLatest("endShifts"),
-  };
-};
 
 export default ManagerDashboard;

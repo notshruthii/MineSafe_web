@@ -1,43 +1,44 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
-import Header from "./WorkerPages/Header.jsx";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+// Common Components
 import Navbar1 from "./components/Navbar1";
+import "./App.css";
 
-import AboutUs from "./LandingPage/NavbarComponents/AboutUs.jsx";
-import AttendanceApp from "./LandingPage/NavbarComponents/Attendance.jsx";
-import LandingPage from "./login/Landingpage1.jsx";
-import WorkerDash from './WorkerPages/Workersdashboard.jsx';
-import SafetyGuidelines from "./LandingPage/Safety_guidelines.jsx";
+// Landing and Login
 import Test from "./LandingPage/FirstPage.jsx";
-
-import WorkersLogin from "./WorkerPages/WorkersLogin.jsx";
-import Manager from './ManagerPages/ManagerHome.jsx'
-import ManagersLogin from "./ManagerPages/ManagersLogin.jsx";
-import ManagerDashboard from "./ManagerPages/Managerdashboard.jsx";
 import Login from './login/Landing.jsx';
+import LandingPage from "./login/Landingpage1.jsx"; // If needed elsewhere
+
+// Navbar Pages
+import AboutUs from "./LandingPage/NavbarComponents/AboutUs.jsx";
+import Contactus from "./LandingPage/NavbarComponents/Contactus.jsx";
+import Career from "./LandingPage/NavbarComponents/Career.jsx";
+import AttendanceApp from "./LandingPage/NavbarComponents/Attendance.jsx";
 import News from './LandingPage/NavbarComponents/News.jsx';
 import Task from './LandingPage/NavbarComponents/Tasks.jsx';
 import Profile from './LandingPage/NavbarComponents/WorkersProfile.jsx';
 import Report from './LandingPage/NavbarComponents/ReportAbnormality.jsx';
 import Resources from './LandingPage/NavbarComponents/SafetyResources.jsx';
-
-import About from './LandingPage/NavbarComponents/AboutUs.jsx';
-// Worker Pages
-
-
-import Careers from './LandingPage/NavbarComponents/CareerSpot.jsx';
+import SafetyGuidelines from "./LandingPage/Safety_guidelines.jsx";
 import Logout from './LandingPage/NavbarComponents/Logout.jsx';
+
+// Worker Pages
+import WorkersLogin from "./WorkerPages/WorkersLogin.jsx";
+import Header from "./WorkerPages/Header.jsx";
+import WorkerDash from './WorkerPages/Workersdashboard.jsx';
+
 // Manager Pages
+import ManagersLogin from "./ManagerPages/ManagersLogin.jsx";
+import Manager from './ManagerPages/ManagerHome.jsx';
+import ManagerDashboard from "./ManagerPages/Managerdashboard.jsx";
 
+import ProtectedRoute from './components/ProtectedRoute';
+import Unauthorized from './pages/Unauthorized';
 
-
-//import Login from './Loginpage';
-
-
-
-import "./App.css";
 const App = () => {
   return (
+    <Router>
     <div
       className="min-h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/coal.png')" }}
@@ -48,27 +49,48 @@ const App = () => {
         <Route path="/" element={<Test />} />
         <Route path="/login" element={<Login />} />
         <Route path="/safety-guidelines" element={<SafetyGuidelines />} />
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/workers-login" element={<WorkersLogin />} />
-        <Route path="/manager-login" element={<ManagersLogin />} />
-        <Route path="/worker-dashboard" element={<Header />} />
-        <Route path="/workers/*" element={<WorkerDash />} />
-        <Route path="/manager-dashboard" element={<ManagerDashboard />} />
-        <Route path="/Attendance" element={<AttendanceApp />} />
+        <Route path="/AboutUs" element={<AboutUs />} />
+        <Route path="/career" element={<Career />} />
+        <Route path="/ContactUs" element={<Contactus />} />
+        <Route path="/attendance" element={<AttendanceApp />} />
         <Route path="/news" element={<News />} />
         <Route path="/task" element={<Task />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/report" element={<Report />} />
-        <Route path="/resource" element={<Resources/>}/>
-        <Route path="/manager" element={<Manager />} />
-        <Route path="/worker-dashboard/*" element={<WorkerDash />} />
-        <Route path="/about" element={<About/>} />
-        <Route path="/career" element={<Careers/>} />
-         <Route path="/logout" element={<Logout/>} />
+        <Route path="/resource" element={<Resources />} />
+        <Route path="/logout" element={<Logout />} />
 
-       
+        {/* Worker Routes */}
+        <Route path="/workers-login" element={<WorkersLogin />} />
+        <Route
+           path="/worker-dashboard"
+           element={
+            <ProtectedRoute allowedRoles={['worker']}>
+              <Header />
+            </ProtectedRoute>
+     }
+       />
+        <Route path="/workers/*" element={<WorkerDash />} />
+
+        {/* Manager Routes */}
+        <Route path="/manager-login" element={<ManagersLogin />} />
+        <Route path="/manager" element={<Manager />} />
+        <Route
+          path="/manager-dashboard"
+          element={
+            <ProtectedRoute allowedRoles={['manager']}>
+          <ManagerDashboard />
+          </ProtectedRoute>
+      }
+      />
+       {/* Unauthorized */}
+        <Route path="/unauthorized" element={<Unauthorized />} />
+
+        {/* Optional catch-all or 404 */}
+        {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
     </div>
+     </Router>
   );
 };
 

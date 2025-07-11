@@ -108,7 +108,7 @@ const Test = () => {
   const api = import.meta.env.VITE_FIREBASE_API_KEY_NEWS;
 
   useEffect(() => {
-    setPageReady(true); // Trigger animation on mount
+    setPageReady(true);
 
     const fetchNews = async () => {
       try {
@@ -131,7 +131,7 @@ const Test = () => {
     };
 
     fetchNews();
-    const intervalId = setInterval(fetchNews, 200000); // refresh every ~3.3 minutes
+    const intervalId = setInterval(fetchNews, 200000);
     return () => clearInterval(intervalId);
   }, []);
 
@@ -229,7 +229,7 @@ const Test = () => {
                 <marquee behavior="scroll" direction="left" scrollamount="6">
                   {newsItems.map((item, index) => (
                     <span key={index} className="mx-4">
-                      {item}
+                      📢 {item}
                     </span>
                   ))}
                 </marquee>

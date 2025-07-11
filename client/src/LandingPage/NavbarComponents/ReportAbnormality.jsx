@@ -33,7 +33,6 @@ export default function ReportAbnormality() {
     try {
       let imageUrl = "";
 
-      // 1. Upload image to Firebase Storage (if provided)
       if (formData.image) {
         const imageRef = ref(
           storage,
@@ -43,7 +42,6 @@ export default function ReportAbnormality() {
         imageUrl = await getDownloadURL(snapshot.ref);
       }
 
-      // 2. Create report data object
       const reportData = {
         name: formData.name,
         location: formData.location,
@@ -52,7 +50,6 @@ export default function ReportAbnormality() {
         timestamp: new Date(),
       };
 
-      // 3. Save to Firestore under worker's subcollection
       await addDoc(collection(db, "workers", employeeId, "reports"), reportData);
 
       alert("Report submitted successfully!");
@@ -69,112 +66,72 @@ export default function ReportAbnormality() {
   };
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.heading}>Mine Safe - Report Abnormality</h1>
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <label style={styles.label}>
-          Name:
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            style={styles.input}
-            required
-          />
-        </label>
-        <label style={styles.label}>
-          Location:
-          <input
-            type="text"
-            name="location"
-            value={formData.location}
-            onChange={handleChange}
-            style={styles.input}
-            required
-          />
-        </label>
-        <label style={styles.label}>
-          Description:
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows="5"
-            style={styles.textarea}
-            required
-          />
-        </label>
-        <label style={styles.label}>
-          Upload Image (optional):
-          <input
-            type="file"
-            name="image"
-            accept="image/*"
-            onChange={handleChange}
-            style={styles.input}
-          />
-        </label>
-        <button type="submit" style={styles.button}>
-          Submit Report
-        </button>
-      </form>
+    <div className="min-h-screen bg-[#0b1e34] text-white p-6">
+      <div className="max-w-2xl mx-auto bg-white bg-opacity-10 backdrop-blur-md p-8 rounded-xl shadow-xl border border-white border-opacity-20">
+        <h1 className="text-3xl font-semibold mb-8 text-center border-b border-white pb-3">
+          Report Abnormality
+        </h1>
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          <div>
+            <label className="block mb-1 text-lg font-medium">Name</label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full p-3 rounded bg-white text-black border border-gray-300"
+              placeholder="Enter your name"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block mb-1 text-lg font-medium">Location</label>
+            <input
+              type="text"
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              className="w-full p-3 rounded bg-white text-black border border-gray-300"
+              placeholder="e.g. Zone A, Shaft 2"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block mb-1 text-lg font-medium">Description</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              rows="5"
+              className="w-full p-3 rounded bg-white text-black border border-gray-300"
+              placeholder="Describe the abnormality or issue"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block mb-1 text-lg font-medium">Upload Image (optional)</label>
+            <input
+              type="file"
+              name="image"
+              accept="image/*"
+              onChange={handleChange}
+              className="w-full p-3 rounded bg-white text-black border border-gray-300"
+            />
+          </div>
+
+          <div className="text-center">
+            <button
+              type="submit"
+              className="bg-white text-black font-semibold px-6 py-2 rounded hover:bg-gray-200 transition duration-200"
+            >
+              Submit Report
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    borderColor: "rgb(194, 199, 212)",
-    backgroundColor: "rgb(1, 8, 27)",
-    color: "#fff",
-    minHeight: "100vh",
-    padding: "2rem",
-    fontFamily: "Arial, sans-serif",
-  },
-  heading: {
-    textAlign: "center",
-    marginBottom: "2rem",
-    fontSize: "2rem",
-  },
-  form: {
-    maxWidth: "500px",
-    margin: "0 auto",
-    display: "flex",
-    flexDirection: "column",
-    gap: "1.2rem",
-    padding: "2rem",
-    border: "2px solid rgba(194, 199, 212, 0.5)",
-    borderRadius: "8px",
-    backgroundColor: "rgba(255,255,255,0.05)",
-  },
-  label: {
-    display: "flex",
-    flexDirection: "column",
-    fontSize: "1rem",
-  },
-  input: {
-    padding: "0.6rem",
-    backgroundColor: "#fff",
-    color: "#000",
-    border: "1px solid #fff",
-    borderRadius: "4px",
-  },
-  textarea: {
-    padding: "0.6rem",
-    backgroundColor: "#fff",
-    color: "#000",
-    border: "1px solid #fff",
-    borderRadius: "4px",
-    resize: "vertical",
-  },
-  button: {
-    padding: "0.8rem",
-    backgroundColor: "#fff",
-    color: "#000",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    fontWeight: "bold",
-  },
-};

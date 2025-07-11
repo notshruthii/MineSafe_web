@@ -25,7 +25,8 @@ const ManagersLogin = ({ embedded = false }) => {
       if (docSnap.exists()) {
         const managerData = docSnap.data();
         managerData.managerId = managerId;
-        localStorage.setItem('managerData', JSON.stringify(managerData));
+         const userData = { ...managerData, role: 'manager', id: managerId };
+        localStorage.setItem('user', JSON.stringify(userData));
         setError('');
         navigate('/manager-dashboard');
       } else {

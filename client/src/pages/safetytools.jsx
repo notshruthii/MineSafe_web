@@ -8,7 +8,7 @@ const SafetyTools = () => {
     glasses: false,
     gloves: false,
     boots: false,
-    vest: false
+    vest: false,
   });
 
   const handleChange = (e) => {
@@ -16,66 +16,70 @@ const SafetyTools = () => {
     setForm(prev => ({ ...prev, [name]: checked }));
   };
 
-  
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const workerData = JSON.parse(localStorage.getItem("workerData"));
-  const userId = workerData?.employeeId;
-  // const managerId = workerData?.managerId || "unknownManager";
+    const workerData = JSON.parse(localStorage.getItem("workerData"));
+    const userId = workerData?.employeeId;
 
-  if (!userId) {
-    alert("Please login first.");
-    return;
-  }
+    if (!userId) {
+      alert("Please login first.");
+      return;
+    }
 
-  const payload = {
-    ...form,
-    userId,
-    managerId,
-    timestamp: new Date(),
+    const payload = {
+      ...form,
+      userId,
+      timestamp: new Date(),
+    };
+
+    try {
+      const safetyToolsRef = collection(db, "workers", userId, "safetyTools");
+      await addDoc(safetyToolsRef, payload);
+      alert('Safety tools submitted successfully!');
+      setForm({
+        helmet: false,
+        glasses: false,
+        gloves: false,
+        boots: false,
+        vest: false,
+      });
+    } catch (err) {
+      console.error("Error submitting safety tools:", err);
+      alert('Failed to submit safety tools.');
+    }
   };
 
-  try {
-    const safetyToolsRef = collection(db, "workers", userId, "safetyTools");
-    await addDoc(safetyToolsRef, payload);
-    alert('Safety tools submitted successfully!');
-    setForm({
-      helmet: false,
-      glasses: false,
-      gloves: false,
-      boots: false,
-      vest: false
-    });
-  } catch (err) {
-    console.error("Error submitting safety tools:", err);
-    alert('Failed to submit safety tools.');
-  }
-};
-
-
   return (
-    <div className="min-h-screen bg-cover bg-center p-8" style={{ backgroundImage: "url('/coal.jpg')" }}>
-      <div className="bg-dark bg-opacity-90 p-6 rounded-lg shadow-md max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold mb-4">Safety Tools Checklist</h1>
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <label className="block">
-            <input type="checkbox" name="helmet" checked={form.helmet} onChange={handleChange} className="mr-2" /> Helmet Checked
-          </label>
-          <label className="block">
-            <input type="checkbox" name="glasses" checked={form.glasses} onChange={handleChange} className="mr-2" /> Safety Glasses Worn
-          </label>
-          <label className="block">
-            <input type="checkbox" name="gloves" checked={form.gloves} onChange={handleChange} className="mr-2" /> Gloves Present
-          </label>
-          <label className="block">
-            <input type="checkbox" name="boots" checked={form.boots} onChange={handleChange} className="mr-2" /> Safety Boots Worn
-          </label>
-          <label className="block">
-            <input type="checkbox" name="vest" checked={form.vest} onChange={handleChange} className="mr-2" /> Reflective Vest Used
-          </label>
-
-          <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Submit</button>
+    <div
+      className="min-h-screen bg-[#0b1e34] text-white p-6 bg-cover bg-center"
+      style={{ backgroundImage: "url('/coal.jpg')" }}
+    >
+      <div className="max-w-2xl mx-auto bg-white bg-opacity-10 backdrop-blur-md p-8 rounded-xl shadow-xl border border-white border-opacity-20">
+        <h1 className="text-3xl font-semibold mb-8 text-center border-b border-white pb-3">
+          Safety Tools Checklist
+        </h1>
+        <form className="space-y-5" onSubmit={handleSubmit}>
+          {['helmet', 'glasses', 'gloves', 'boots', 'vest'].map((item) => (
+            <label key={item} className="flex items-center space-x-3 text-lg">
+              <input
+                type="checkbox"
+                name={item}
+                checked={form[item]}
+                onChange={handleChange}
+                className="accent-blue-500"
+              />
+              <span className="capitalize">{item} Checked</span>
+            </label>
+          ))}
+          <div className="text-center pt-4">
+            <button
+              type="submit"
+              className="bg-[#123456] hover:bg-[#102a45] transition duration-200 text-white px-6 py-2 rounded text-lg font-medium"
+            >
+              Submit
+            </button>
+          </div>
         </form>
       </div>
     </div>
