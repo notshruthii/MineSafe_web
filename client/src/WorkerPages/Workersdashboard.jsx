@@ -9,7 +9,7 @@ import ReportAbnormality from "../LandingPage/NavbarComponents/ReportAbnormality
 import AttendanceApp from "../LandingPage/NavbarComponents/Attendance";
 import StartShift from "../pages/startshift";
 
-import TaskLogging from "../pages/TaskLogging";
+import TaskLogging from "../pages/tasklogging";
 import EndShift from "../pages/endshift";
 import SafetyTools from "../pages/safetytools";
 import Logout from "../pages/logout";
