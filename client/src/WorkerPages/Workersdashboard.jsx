@@ -7,12 +7,12 @@ import WorkersLogin from "./WorkersLogin";;
 import WorkerLayout from "./Workerlayout";
 import ReportAbnormality from "../LandingPage/NavbarComponents/ReportAbnormality.jsx";
 import AttendanceApp from "../LandingPage/NavbarComponents/Attendance";
-import StartShift from "../pages/StartShift";
+import StartShift from "../pages/startshift";
 
 import TaskLogging from "../pages/TaskLogging";
-import EndShift from "../pages/EndShift";
-import SafetyTools from "../pages/SafetyTools";
-import Logout from "../pages/Logout";
+import EndShift from "../pages/endshift";
+import SafetyTools from "../pages/safetytools";
+import Logout from "../pages/logout";
 
 const WorkerDash = () => {
   return (
