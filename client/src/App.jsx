@@ -8,7 +8,7 @@ import "./App.css";
 // Landing and Login
 import Test from "./LandingPage/FirstPage.jsx";
 import Login from './login/Landing.jsx';
-import LandingPage from "./login/Landingpage1.jsx"; // If needed elsewhere
+import LandingPage from "./login/Landingpage1.jsx"; // Optional
 
 // Navbar Pages
 import AboutUs from "./LandingPage/NavbarComponents/AboutUs.jsx";
@@ -33,8 +33,8 @@ import ManagersLogin from "./ManagerPages/ManagersLogin.jsx";
 import Manager from './ManagerPages/ManagerHome.jsx';
 import ManagerDashboard from "./ManagerPages/Managerdashboard.jsx";
 
-import ProtectedRoute from './components/ProtectedRoute';
-import Unauthorized from './pages/Unauthorized';
+// Removed: ProtectedRoute
+// Removed: Unauthorized
 
 const App = () => {
   return (
@@ -45,6 +45,7 @@ const App = () => {
       <Navbar1 />
 
       <Routes>
+        {/* Landing Pages */}
         <Route path="/" element={<Test />} />
         <Route path="/login" element={<Login />} />
         <Route path="/safety-guidelines" element={<SafetyGuidelines />} />
@@ -59,35 +60,17 @@ const App = () => {
         <Route path="/resource" element={<Resources />} />
         <Route path="/logout" element={<Logout />} />
 
-        {/* Worker Routes */}
+        {/* Worker Routes (open to all) */}
         <Route path="/workers-login" element={<WorkersLogin />} />
-        <Route
-          path="/worker-dashboard"
-          element={
-            <ProtectedRoute allowedRoles={['worker']}>
-              <Header />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/worker-dashboard" element={<Header />} />
         <Route path="/workers/*" element={<WorkerDash />} />
 
-        {/* Manager Routes */}
+        {/* Manager Routes (open to all) */}
         <Route path="/manager-login" element={<ManagersLogin />} />
         <Route path="/manager" element={<Manager />} />
-        <Route
-          path="/manager-dashboard"
-          element={
-            <ProtectedRoute allowedRoles={['manager']}>
-              <ManagerDashboard />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/manager-dashboard" element={<ManagerDashboard />} />
 
-        {/* Unauthorized */}
-        <Route path="/unauthorized" element={<Unauthorized />} />
-
-        {/* Optional catch-all or 404 */}
-        {/* <Route path="*" element={<NotFound />} /> */}
+        {/* No unauthorized route needed anymore */}
       </Routes>
     </div>
   );

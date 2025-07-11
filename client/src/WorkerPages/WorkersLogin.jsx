@@ -70,7 +70,7 @@ const WorkersLogin = ({ embedded = false }) => {
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="absolute right-3 top-9 text-sm text-gray-400 hover:text-yellow-400"
+          className="absolute right-3 text-sm text-gray-400 hover:text-yellow-400"
           tabIndex={-1}
         >
           {showPassword ? 'Hide' : 'Show'}
@@ -83,8 +83,8 @@ const WorkersLogin = ({ embedded = false }) => {
 
       <button
         type="submit"
-        className="w-full bg-white text-black py-2 rounded-md font-semibold hover:bg-gray-200 transition"
-      >
+ className="w-full bg-white text-black py-2 rounded-md font-semibold hover:bg-gray-200 transition"
+  style={{ paddingBottom: '-2px' }}      >
         Login
       </button>
     </form>
