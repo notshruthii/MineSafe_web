@@ -33,8 +33,7 @@ import ManagersLogin from "./ManagerPages/ManagersLogin.jsx";
 import Manager from './ManagerPages/ManagerHome.jsx';
 import ManagerDashboard from "./ManagerPages/Managerdashboard.jsx";
 
-// Removed: ProtectedRoute
-// Removed: Unauthorized
+
 
 const App = () => {
   return (
@@ -49,7 +48,7 @@ const App = () => {
         <Route path="/" element={<Test />} />
         <Route path="/login" element={<Login />} />
         <Route path="/safety-guidelines" element={<SafetyGuidelines />} />
-        <Route path="/AboutUs" element={<AboutUs />} />
+        <Route path="/about" element={<AboutUs />} />
         <Route path="/career" element={<Career />} />
         <Route path="/ContactUs" element={<Contactus />} />
         <Route path="/attendance" element={<AttendanceApp />} />
