@@ -163,8 +163,8 @@ const ManagerDashboard = () => {
         onNavigate={setActiveTab}
       />
 
-      <div className="flex-1 p-6 text-black">
-        <h1 className="text-3xl font-bold mb-6">Manager Dashboard</h1>
+      <div className="flex-1 p-6 ">
+        <h1 className="text-3xl font-bold mb-6 text-black">Manager Dashboard</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <Card title="Total Workers" value={workers.length} />
@@ -225,10 +225,10 @@ const ManagerDashboard = () => {
         {activeTab === "workers" && (
           <>
             <h2 className="text-2xl font-semibold mb-4 text-black">Your Workers</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-black">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ">
               {workers.map((worker) => (
-                <div key={worker.id} className="bg-white p-4 rounded shadow text-black">
-                  <h3 className="text-xl font-semibold">{worker.fullName || "Unnamed"}</h3>
+                <div key={worker.id} className="bg-white p-4 rounded shadow ">
+                  <h3 className="text-xl font-semibold text-black">{worker.fullName || "Unnamed"} </h3>
                   <p>ID: {worker.id}</p>
                   <p>Manager ID: {worker.mgrID}</p>
                   <button
@@ -294,15 +294,15 @@ const Card = ({ title, value }) => {
 
   return (
     <div className="bg-white p-4 rounded shadow-md text-center hover:shadow-lg hover:scale-105 transform transition duration-300 ease-in-out cursor-pointer border text-black">
-      <h3 className="text-lg font-semibold">{title}</h3>
+      <h3 className="text-lg font-semibold text-black">{title}</h3>
       <p className={`text-2xl font-bold ${valueColor}`}>{value}</p>
     </div>
   );
 };
 
 const ReportSection = ({ title, entries }) => (
-  <div className="mb-6 text-black">
-    <h3 className="text-xl font-semibold mb-2">{title}</h3>
+  <div className="mb-6 ">
+    <h3 className="text-xl font-semibold mb-2 text-black">{title}</h3>
     <ul className="list-disc ml-6">
       {Object.entries(entries).map(([key, value]) =>
         typeof value === "object" ? (

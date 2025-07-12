@@ -113,8 +113,7 @@ const Test = () => {
     const fetchNews = async () => {
       try {
         const response = await fetch(
-          `https://newsapi.org/v2/everything?q=coal%20mine%20AND%20India&language=en&sortBy=publishedAt&apiKey=${api}`
-        );
+`https://newsapi.org/v2/everything?qInTitle=coal%20mine&language=en&sortBy=publishedAt&apiKey=${api}`        );
         const data = await response.json();
         if (data.status === "ok") {
           const titles = data.articles.map(article => article.title);
